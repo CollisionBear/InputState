@@ -1,8 +1,8 @@
 {
 	"name": "com.collisionbear.inputstate",
-	"version": "1.0.1",
-	"description": "CollisionBear input state is a stateful input abstraction for Unity3D, built upon their internal Input management.",
-	"displayName": "Collision Bear - InputState",
+	"version": "1.0.2",
+	"description": "Input state is a stateful input abstraction for Unity3D, built upon the internal Input management.",
+	"displayName": "InputState",
 	"unity": "2019.4",
 	"unityRelease": "40f1",
 	"licenseUrl": "https://opensource.org/licenses/MIT",
