@@ -1,8 +1,8 @@
 {
-    "name": "Fyrvall.BonaInput.Editor",
-    "rootNamespace": "",
+    "name": "CollisionBear.InputState.Editor",
+    "rootNamespace": "CollisionBear.InputState.Editor",
     "references": [
-        "Fyrvall.BonaInput"
+        "CollisionBear.InputState"
     ],
     "includePlatforms": [
         "Editor"

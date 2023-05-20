@@ -1,6 +1,6 @@
 {
-    "name": "Fyrvall.BonaInput",
-    "rootNamespace": "",
+    "name": "CollisionBear.InputState",
+    "rootNamespace": "CollisionBear.InputState",
     "references": [
         "Unity.InputSystem"
     ],
