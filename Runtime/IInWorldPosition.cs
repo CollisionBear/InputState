@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Fyrvall.Input
+namespace CollisionBear.InputState
 {
     public interface IInWorldPosition
     {

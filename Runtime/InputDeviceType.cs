@@ -1,4 +1,4 @@
-﻿namespace Fyrvall.Input
+﻿namespace CollisionBear.InputState
 {
     public enum InputDeviceType
     {

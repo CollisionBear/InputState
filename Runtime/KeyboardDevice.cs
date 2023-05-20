@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Fyrvall.Input
+namespace CollisionBear.InputState
 {
     [CreateAssetMenu(fileName = "New Keyboard", menuName = "MageQuest/Input/Keyboard Device")]
     public class KeyboardDevice : ScriptableObject, IInputDevice

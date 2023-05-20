@@ -1,4 +1,4 @@
-namespace Fyrvall.Input
+namespace CollisionBear.InputState
 {
     public class VoidInputHandler : IInputHandler
     {

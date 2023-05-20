@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Fyrvall.Input
+namespace CollisionBear.InputState
 {
     public enum InputType
     {

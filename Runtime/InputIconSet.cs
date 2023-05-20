@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Fyrvall.Input
+namespace CollisionBear.InputState
 {
     [CreateAssetMenu(fileName = "New Icon set", menuName = "MageQuest/Input/Icon Set")]
     public class InputIconSet : ScriptableObject

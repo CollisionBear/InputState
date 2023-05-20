@@ -2,7 +2,7 @@
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
-namespace Fyrvall.Input
+namespace CollisionBear.InputState
 {
     public class InputSystemDevice : IInputDevice
     {

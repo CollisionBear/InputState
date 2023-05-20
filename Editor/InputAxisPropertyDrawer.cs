@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Fyrvall.Input
+namespace CollisionBear.InputState
 {
     [CustomPropertyDrawer(typeof(InputAxisAttribute))]
     public class AxisCustomDrawer : PropertyDrawer

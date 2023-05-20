@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-namespace Fyrvall.Input
+namespace CollisionBear.InputState
 {
     public class InputManager : MonoBehaviour
     {
