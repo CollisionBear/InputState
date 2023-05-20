@@ -1,13 +1,13 @@
 {
-	"name": "com.fyrvall.bonainput",
-	"version": "1.0.0",
-	"description": "Lightweight Unity Editor to check Prefabs for predetermined faults like missing RequiredComponents and removed references.",
-	"displayName": "Bona Input",
+	"name": "com.collisionbear.inputstate",
+	"version": "1.0.1",
+	"description": "CollisionBear input state is a stateful input abstraction for Unity3D, built upon their internal Input management.",
+	"displayName": "Collision Bear - InputState",
 	"unity": "2019.4",
 	"unityRelease": "40f1",
 	"licenseUrl": "https://opensource.org/licenses/MIT",
 	"author": {
-		"name": "Bona Fyrvall"
+		"name": "CollisionBear"
 	}
 }
 	
