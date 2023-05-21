@@ -11,34 +11,41 @@ namespace CollisionBear.InputState
         private KeyState PreviousState;
 
         public void SetState(KeyCode keyCode) {
-            PreviousState = State;
-            State = GetKeyStateForKey(keyCode);
+            SetState(GetKeyStateForKey(keyCode));
         }
 
         public void SetState(KeyCode keyCodeA, KeyCode keyCodeB) {
-            PreviousState = State;
-            State = Max(GetKeyStateForKey(keyCodeA),  GetKeyStateForKey(keyCodeB));
+            SetState(Max(GetKeyStateForKey(keyCodeA),  GetKeyStateForKey(keyCodeB)));
         }
 
         public void SetState(ButtonControl buttonControl) {
-            PreviousState = State;
-            State = GetKeyStateForButton(buttonControl);
+            SetState(GetKeyStateForButton(buttonControl));
         }
 
         public void SetState(ButtonControl buttonControl, float value, float directionButtonTreshold) {  
+            SetState(Max(GetKeyStateForButton(buttonControl), GetLeftStickKeyState(value, directionButtonTreshold)));
+        }
+
+        private void SetState(KeyState newState) {
+            Time += UnityEngine.Time.deltaTime;
+
+            if(newState != PreviousState) {
+                Time = 0;
+            }
+
             PreviousState = State;
-            State = Max(GetKeyStateForButton(buttonControl), GetLeftStickKeyState(value, directionButtonTreshold));
+            State = newState;
         }
 
         private KeyState GetLeftStickKeyState(float value, float directionButtonTreshold) {
             if (value > directionButtonTreshold) {
-                if (PreviousState == KeyState.Up || PreviousState == KeyState.Released) {
+                if (State == KeyState.Up || State == KeyState.Released) {
                     return KeyState.Pressed;
                 } else {
                     return KeyState.Down;
                 }
             } else {
-                if (PreviousState == KeyState.Down || PreviousState == KeyState.Pressed) {
+                if (State == KeyState.Down || State == KeyState.Pressed) {
                     return KeyState.Released;
                 } else {
                     return KeyState.Up;
@@ -87,13 +94,13 @@ namespace CollisionBear.InputState
 
             KeyState result;
             if (triggerState) {
-                if (PreviousState == KeyState.Up) {
+                if (State == KeyState.Up) {
                     result = KeyState.Pressed;
                 } else {
                     result = KeyState.Down;
                 }
             } else {
-                if (PreviousState == KeyState.Down) {
+                if (State == KeyState.Down) {
                     result = KeyState.Released;
                 } else {
                     result = KeyState.Up;
