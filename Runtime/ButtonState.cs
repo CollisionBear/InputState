@@ -31,14 +31,14 @@ namespace CollisionBear.InputState
         }
 
         private KeyState GetLeftStickKeyState(float value, float directionButtonTreshold) {
-            if (value < directionButtonTreshold) {
-                if (State == KeyState.Up || State == KeyState.Released) {
+            if (value > directionButtonTreshold) {
+                if (PreviousState == KeyState.Up || PreviousState == KeyState.Released) {
                     return KeyState.Pressed;
                 } else {
                     return KeyState.Down;
                 }
             } else {
-                if (State == KeyState.Down || State == KeyState.Pressed) {
+                if (PreviousState == KeyState.Down || PreviousState == KeyState.Pressed) {
                     return KeyState.Released;
                 } else {
                     return KeyState.Up;
