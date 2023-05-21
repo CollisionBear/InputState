@@ -44,6 +44,7 @@ namespace CollisionBear.InputState
         }
 
         public ButtonState GetButtonState(Button button) => ButtonStates[(int)button];
+        public float GetButtonTime(Button button) => ButtonStates[(int)button].Time;
         public bool GetButtonDown(Button button) => GroupedDownState.Contains(ButtonStates[(int)button].State);
         public bool GetButtonUp(Button button) => GroupedUpState.Contains(ButtonStates[(int)button].State);
         public bool GetButtonPressed(Button button) => ButtonStates[(int)button].State == KeyState.Pressed;
