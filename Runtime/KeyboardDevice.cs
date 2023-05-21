@@ -245,29 +245,14 @@ namespace CollisionBear.InputState
         private void ReadButtonState(ButtonState[] buttonStates)
         {
             foreach (var button in ButtonIndices) {
-                buttonStates[button].State = GetKeyStateForKey(ButtonMappings[button]);
+                buttonStates[button].SetState(ButtonMappings[button]);
             }
         }
 
         private void ReadDirectionButtonState(ButtonState[] buttonStates)
         {
             foreach (var button in DirectionalButtonIndices) {
-                buttonStates[button].State = Max(GetKeyStateForKey(DirectionArrowButtonMappings[button]),  GetKeyStateForKey(DirectionWasdButtonMappings[button]));
-            }
-        }
-
-        private KeyState Max(KeyState a, KeyState b) => (KeyState)Mathf.Max((byte)a, (byte)b);
-
-        private KeyState GetKeyStateForKey(KeyCode key)
-        {
-            if (Input.GetKeyDown(key)) {
-                return KeyState.Pressed;
-            } else if (Input.GetKeyUp(key)) {
-                return KeyState.Released;
-            } else if (Input.GetKey(key)) {
-                return KeyState.Down;
-            } else {
-                return KeyState.Up;
+                buttonStates[button].SetState(DirectionArrowButtonMappings[button], DirectionWasdButtonMappings[button]);
             }
         }
 
