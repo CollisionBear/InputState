@@ -11,11 +11,39 @@ namespace CollisionBear.InputState
         private KeyState PreviousState;
 
         public void SetState(KeyCode keyCode) {
+            PreviousState = State;
             State = GetKeyStateForKey(keyCode);
         }
 
         public void SetState(KeyCode keyCodeA, KeyCode keyCodeB) {
+            PreviousState = State;
             State = Max(GetKeyStateForKey(keyCodeA),  GetKeyStateForKey(keyCodeB));
+        }
+
+        public void SetState(ButtonControl buttonControl) {
+            PreviousState = State;
+            State = GetKeyStateForButton(buttonControl);
+        }
+
+        public void SetState(ButtonControl buttonControl, float value, float directionButtonTreshold) {  
+            PreviousState = State;
+            State = Max(GetKeyStateForButton(buttonControl), GetLeftStickKeyState(value, directionButtonTreshold));
+        }
+
+        private KeyState GetLeftStickKeyState(float value, float directionButtonTreshold) {
+            if (value < directionButtonTreshold) {
+                if (State == KeyState.Up || State == KeyState.Released) {
+                    return KeyState.Pressed;
+                } else {
+                    return KeyState.Down;
+                }
+            } else {
+                if (State == KeyState.Down || State == KeyState.Pressed) {
+                    return KeyState.Released;
+                } else {
+                    return KeyState.Up;
+                }
+            }
         }
 
         private KeyState GetKeyStateForKey(KeyCode keyCode)
@@ -29,11 +57,6 @@ namespace CollisionBear.InputState
             } else {
                 return KeyState.Up;
             }
-        }
-
-
-        public void SetState(ButtonControl buttonControl) {
-            State = GetKeyStateForButton(buttonControl);
         }
 
         private KeyState GetKeyStateForButton(ButtonControl buttonControl)
