@@ -74,26 +74,26 @@ namespace CollisionBear.InputState
 
         protected void ReadButtonStates(ButtonState[] buttonStates)
         {
-            buttonStates[(int)Button.TriggerLeft] = ReadTriggerValue(buttonStates[(int)Button.TriggerLeft], GamePad.leftTrigger);
-            buttonStates[(int)Button.TriggerRight] = ReadTriggerValue(buttonStates[(int)Button.TriggerRight], GamePad.rightTrigger);
+            buttonStates[(int)Button.TriggerLeft].State = ReadTriggerValue(buttonStates[(int)Button.TriggerLeft], GamePad.leftTrigger);
+            buttonStates[(int)Button.TriggerRight].State = ReadTriggerValue(buttonStates[(int)Button.TriggerRight], GamePad.rightTrigger);
 
-            buttonStates[(int)Button.BumberLeft] = GetButtonstateForKey(GamePad.leftShoulder);
-            buttonStates[(int)Button.BumberRight] = GetButtonstateForKey(GamePad.rightShoulder);
-            buttonStates[(int)Button.Start] = GetButtonstateForKey(GamePad.startButton);
-            buttonStates[(int)Button.Select] = GetButtonstateForKey(GamePad.selectButton);
-            buttonStates[(int)Button.Action00] = GetButtonstateForKey(GamePad.aButton);
-            buttonStates[(int)Button.Action01] = GetButtonstateForKey(GamePad.bButton);
-            buttonStates[(int)Button.Action02] = GetButtonstateForKey(GamePad.xButton);
-            buttonStates[(int)Button.Action03] = GetButtonstateForKey(GamePad.yButton);
-            buttonStates[(int)Button.Action04] = GetButtonstateForKey(GamePad.dpad.up);
-            buttonStates[(int)Button.Action05] = GetButtonstateForKey(GamePad.dpad.down);
-            buttonStates[(int)Button.Action06] = GetButtonstateForKey(GamePad.dpad.left);
-            buttonStates[(int)Button.Action07] = GetButtonstateForKey(GamePad.dpad.right);
-            buttonStates[(int)Button.Accept] = GetButtonstateForKey(GamePad.aButton);
-            buttonStates[(int)Button.Cancel] = GetButtonstateForKey(GamePad.bButton);
+            buttonStates[(int)Button.BumberLeft].State = GetKeyStateForKey(GamePad.leftShoulder);
+            buttonStates[(int)Button.BumberRight].State = GetKeyStateForKey(GamePad.rightShoulder);
+            buttonStates[(int)Button.Start].State = GetKeyStateForKey(GamePad.startButton);
+            buttonStates[(int)Button.Select].State = GetKeyStateForKey(GamePad.selectButton);
+            buttonStates[(int)Button.Action00].State = GetKeyStateForKey(GamePad.aButton);
+            buttonStates[(int)Button.Action01].State = GetKeyStateForKey(GamePad.bButton);
+            buttonStates[(int)Button.Action02].State = GetKeyStateForKey(GamePad.xButton);
+            buttonStates[(int)Button.Action03].State = GetKeyStateForKey(GamePad.yButton);
+            buttonStates[(int)Button.Action04].State = GetKeyStateForKey(GamePad.dpad.up);
+            buttonStates[(int)Button.Action05].State = GetKeyStateForKey(GamePad.dpad.down);
+            buttonStates[(int)Button.Action06].State = GetKeyStateForKey(GamePad.dpad.left);
+            buttonStates[(int)Button.Action07].State = GetKeyStateForKey(GamePad.dpad.right);
+            buttonStates[(int)Button.Accept].State = GetKeyStateForKey(GamePad.aButton);
+            buttonStates[(int)Button.Cancel].State = GetKeyStateForKey(GamePad.bButton);
         }
 
-        protected ButtonState ReadTriggerValue(ButtonState previousState, ButtonControl triggerControl)
+        protected KeyState ReadTriggerValue(ButtonState buttonState, ButtonControl triggerControl)
         {
             var triggerState = false;
             var triggerValue = triggerControl.ReadValue();
@@ -102,18 +102,18 @@ namespace CollisionBear.InputState
                 triggerState = true;
             }
 
-            ButtonState result;
+            KeyState result;
             if (triggerState) {
-                if (previousState == ButtonState.Up) {
-                    result = ButtonState.Pressed;
+                if (buttonState.PreviousState == KeyState.Up) {
+                    result = KeyState.Pressed;
                 } else {
-                    result = ButtonState.Down;
+                    result = KeyState.Down;
                 }
             } else {
-                if (previousState == ButtonState.Down) {
-                    result = ButtonState.Released;
+                if (buttonState.PreviousState == KeyState.Down) {
+                    result = KeyState.Released;
                 } else {
-                    result = ButtonState.Up;
+                    result = KeyState.Up;
                 }
             }
 
@@ -122,94 +122,94 @@ namespace CollisionBear.InputState
 
         protected void ReadDirectionButtonStates(ButtonState[] buttonStates)
         {
-            buttonStates[(int)DirectionButton.Up] = Max(GetButtonstateForKey(GamePad.dpad.up), GetButtonstateForLeftStick(buttonStates, DirectionButton.Up));
-            buttonStates[(int)DirectionButton.Down] = Max(GetButtonstateForKey(GamePad.dpad.down), GetButtonstateForLeftStick(buttonStates, DirectionButton.Down));
-            buttonStates[(int)DirectionButton.Left] = Max(GetButtonstateForKey(GamePad.dpad.left), GetButtonstateForLeftStick(buttonStates, DirectionButton.Left));
-            buttonStates[(int)DirectionButton.Right] = Max(GetButtonstateForKey(GamePad.dpad.right), GetButtonstateForLeftStick(buttonStates, DirectionButton.Right));
+            buttonStates[(int)DirectionButton.Up].State = Max(GetKeyStateForKey(GamePad.dpad.up), GetButtonstateForLeftStick(buttonStates, DirectionButton.Up));
+            buttonStates[(int)DirectionButton.Down].State = Max(GetKeyStateForKey(GamePad.dpad.down), GetButtonstateForLeftStick(buttonStates, DirectionButton.Down));
+            buttonStates[(int)DirectionButton.Left].State = Max(GetKeyStateForKey(GamePad.dpad.left), GetButtonstateForLeftStick(buttonStates, DirectionButton.Left));
+            buttonStates[(int)DirectionButton.Right].State = Max(GetKeyStateForKey(GamePad.dpad.right), GetButtonstateForLeftStick(buttonStates, DirectionButton.Right));
         }
 
-        private ButtonState GetButtonstateForKey(ButtonControl button)
+        private KeyState GetKeyStateForKey(ButtonControl button)
         {
             if (button.wasPressedThisFrame) {
-                return ButtonState.Pressed;
+                return KeyState.Pressed;
             } else if (button.wasReleasedThisFrame) {
-                return ButtonState.Released;
+                return KeyState.Released;
             } else if (button.isPressed) {
-                return ButtonState.Down;
+                return KeyState.Down;
             } else {
-                return ButtonState.Up;
+                return KeyState.Up;
             }
         }
 
-        private ButtonState Max(ButtonState a, ButtonState b) => (ButtonState)Mathf.Max((int)a, (int)b);
+        private KeyState Max(KeyState a, KeyState b) => (KeyState)Mathf.Max((byte)a, (byte)b);
 
-        private ButtonState GetButtonstateForLeftStick(ButtonState[] buttonStates, DirectionButton direction)
+        private KeyState GetButtonstateForLeftStick(ButtonState[] buttonStates, DirectionButton direction)
         {
             var readLeftStick = GamePad.leftStick.ReadValue();
 
             if (direction == DirectionButton.Left) {
                 var currentState = buttonStates[(int)DirectionButton.Left];
                 if (readLeftStick.x < -DirectionButtonTreshold) {
-                    if (currentState == ButtonState.Up || currentState == ButtonState.Released) {
-                        return ButtonState.Pressed;
+                    if (currentState.State == KeyState.Up || currentState.State == KeyState.Released) {
+                        return KeyState.Pressed;
                     } else {
-                        return ButtonState.Down;
+                        return KeyState.Down;
                     }
                 } else {
-                    if (currentState == ButtonState.Down || currentState == ButtonState.Pressed) {
-                        return ButtonState.Released;
+                    if (currentState.State == KeyState.Down || currentState.State == KeyState.Pressed) {
+                        return KeyState.Released;
                     } else {
-                        return ButtonState.Up;
+                        return KeyState.Up;
                     }
                 }
             } else if (direction == DirectionButton.Right) {
                 var currentState = buttonStates[(int)DirectionButton.Right];
                 if (readLeftStick.x > DirectionButtonTreshold) {
-                    if (currentState == ButtonState.Up || currentState == ButtonState.Released) {
-                        return ButtonState.Pressed;
+                    if (currentState.State == KeyState.Up || currentState.State == KeyState.Released) {
+                        return KeyState.Pressed;
                     } else {
-                        return ButtonState.Down;
+                        return KeyState.Down;
                     }
                 } else {
-                    if (currentState == ButtonState.Down || currentState == ButtonState.Pressed) {
-                        return ButtonState.Released;
+                    if (currentState.State == KeyState.Down || currentState.State == KeyState.Pressed) {
+                        return KeyState.Released;
                     } else {
-                        return ButtonState.Up;
+                        return KeyState.Up;
                     }
                 }
             } else if (direction == DirectionButton.Up) {
                 var currentState = buttonStates[(int)DirectionButton.Up];
                 if (readLeftStick.y > DirectionButtonTreshold) {
-                    if (currentState == ButtonState.Up || currentState == ButtonState.Released) {
-                        return ButtonState.Pressed;
+                    if (currentState.State == KeyState.Up || currentState.State == KeyState.Released) {
+                        return KeyState.Pressed;
                     } else {
-                        return ButtonState.Down;
+                        return KeyState.Down;
                     }
                 } else {
-                    if (currentState == ButtonState.Down || currentState == ButtonState.Pressed) {
-                        return ButtonState.Released;
+                    if (currentState.State == KeyState.Down || currentState.State == KeyState.Pressed) {
+                        return KeyState.Released;
                     } else {
-                        return ButtonState.Up;
+                        return KeyState.Up;
                     }
                 }
             } else if (direction == DirectionButton.Down) {
                 var currentState = buttonStates[(int)DirectionButton.Down];
                 if (readLeftStick.y < -DirectionButtonTreshold) {
-                    if (currentState == ButtonState.Up || currentState == ButtonState.Released) {
-                        return ButtonState.Pressed;
+                    if (currentState.State == KeyState.Up || currentState.State == KeyState.Released) {
+                        return KeyState.Pressed;
                     } else {
-                        return ButtonState.Down;
+                        return KeyState.Down;
                     }
                 } else {
-                    if (currentState == ButtonState.Down || currentState == ButtonState.Pressed) {
-                        return ButtonState.Released;
+                    if (currentState.State == KeyState.Down || currentState.State == KeyState.Pressed) {
+                        return KeyState.Released;
                     } else {
-                        return ButtonState.Up;
+                        return KeyState.Up;
                     }
                 }
             }
 
-            return ButtonState.Up;
+            return KeyState.Up;
         }
     }
 }

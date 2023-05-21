@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CollisionBear.InputState
 {
-    [CreateAssetMenu(fileName = "New Keyboard", menuName = "MageQuest/Input/Keyboard Device")]
+    [CreateAssetMenu(fileName = "New Keyboard", menuName = "CollisionBear/Input/Keyboard Device")]
     public class KeyboardDevice : ScriptableObject, IInputDevice
     {
         public MouseMarker MouseMarkerPrefab;
@@ -108,11 +108,11 @@ namespace CollisionBear.InputState
                 DirectionWasdButtonMappings = SetupWasdKeyDirectionsButtonMappings();
 
                 foreach (var button in ButtonIndices) {
-                    InputState.ButtonStates[button] = ButtonState.Up;
+                    InputState.ButtonStates[button].State = KeyState.Up;
                 }
 
                 foreach (var button in DirectionalButtonIndices) {
-                    InputState.DirectionButtonStates[button] = ButtonState.Up;
+                    InputState.DirectionButtonStates[button].State = KeyState.Up;
                 }
 
                 return true;
@@ -245,29 +245,29 @@ namespace CollisionBear.InputState
         private void ReadButtonState(ButtonState[] buttonStates)
         {
             foreach (var button in ButtonIndices) {
-                buttonStates[button] = GetButtonstateForKey(ButtonMappings[button]);
+                buttonStates[button].State = GetKeyStateForKey(ButtonMappings[button]);
             }
         }
 
         private void ReadDirectionButtonState(ButtonState[] buttonStates)
         {
             foreach (var button in DirectionalButtonIndices) {
-                buttonStates[button] = Max(GetButtonstateForKey(DirectionArrowButtonMappings[button]),  GetButtonstateForKey(DirectionWasdButtonMappings[button]));
+                buttonStates[button].State = Max(GetKeyStateForKey(DirectionArrowButtonMappings[button]),  GetKeyStateForKey(DirectionWasdButtonMappings[button]));
             }
         }
 
-        private ButtonState Max(ButtonState a, ButtonState b) => (ButtonState)Mathf.Max((int)a, (int)b);
+        private KeyState Max(KeyState a, KeyState b) => (KeyState)Mathf.Max((byte)a, (byte)b);
 
-        private ButtonState GetButtonstateForKey(KeyCode key)
+        private KeyState GetKeyStateForKey(KeyCode key)
         {
-            if (UnityEngine.Input.GetKeyDown(key)) {
-                return ButtonState.Pressed;
-            } else if (UnityEngine.Input.GetKeyUp(key)) {
-                return ButtonState.Released;
-            } else if (UnityEngine.Input.GetKey(key)) {
-                return ButtonState.Down;
+            if (Input.GetKeyDown(key)) {
+                return KeyState.Pressed;
+            } else if (Input.GetKeyUp(key)) {
+                return KeyState.Released;
+            } else if (Input.GetKey(key)) {
+                return KeyState.Down;
             } else {
-                return ButtonState.Up;
+                return KeyState.Up;
             }
         }
 

@@ -1,6 +1,13 @@
 namespace CollisionBear.InputState
 {
-    public enum ButtonState : int
+    public class ButtonState
+    {
+        public KeyState State;
+        public KeyState PreviousState;
+        public float Time;
+    }
+
+    public enum KeyState : byte
     {
         Up = 0,
         Down = 1,           // The button is in a pressed state
