@@ -80,7 +80,14 @@ namespace CollisionBear.InputState
         }
 
         public void SetStateFromTrigger(ButtonControl triggerControl, float triggerThreshold) {
-            State = ReadTriggerValue(triggerControl, triggerThreshold);
+            var newState = ReadTriggerValue(triggerControl, triggerThreshold);
+            if(State != newState) {
+                Time = 0;
+            } else {
+                Time += UnityEngine.Time.deltaTime;
+            }
+
+            State = newState;
         }
 
         private KeyState ReadTriggerValue(ButtonControl triggerControl, float triggerThreshold)
