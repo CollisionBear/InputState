@@ -79,6 +79,10 @@ namespace CollisionBear.InputState
 
             buttonStates[(int)Button.BumberLeft] = GetButtonstateForKey(GamePad.leftShoulder);
             buttonStates[(int)Button.BumberRight] = GetButtonstateForKey(GamePad.rightShoulder);
+
+            buttonStates[(int)Button.StickLeft] = GetButtonstateForKey(GamePad.leftStickButton);
+            buttonStates[(int)Button.StickRight] = GetButtonstateForKey(GamePad.rightStickButton);
+
             buttonStates[(int)Button.Start] = GetButtonstateForKey(GamePad.startButton);
             buttonStates[(int)Button.Select] = GetButtonstateForKey(GamePad.selectButton);
             buttonStates[(int)Button.Action00] = GetButtonstateForKey(GamePad.aButton);

@@ -15,6 +15,8 @@ namespace CollisionBear.InputState
         TriggerRight = 11,
         BumberLeft = 12,
         BumberRight = 13,
+        StickLeft = 14,
+        StickRight = 15,
         Start = 20,
         Select = 21,
         Accept = 30,

@@ -22,6 +22,8 @@ namespace CollisionBear.InputState
             (int)Button.TriggerRight,
             (int)Button.BumberLeft,
             (int)Button.BumberRight,
+            (int)Button.StickLeft,
+            (int)Button.StickRight,
             (int)Button.Start,
             (int)Button.Select,
             (int)Button.Accept,
@@ -55,6 +57,9 @@ namespace CollisionBear.InputState
 
         public KeyCode LeftTrigger = KeyCode.Q;
         public KeyCode RightTrigger = KeyCode.E;
+
+        public KeyCode StickLeft = KeyCode.Space;
+        public KeyCode StickRight = KeyCode.LeftControl;
 
         public KeyCode Start = KeyCode.Escape;
         public KeyCode Select = KeyCode.Return;
@@ -159,6 +164,8 @@ namespace CollisionBear.InputState
             result[(int)Button.Start] = Start;
             result[(int)Button.BumberLeft] = LeftBumper;
             result[(int)Button.BumberRight] = RightBumper;
+            result[(int)Button.StickLeft] = StickLeft;
+            result[(int)Button.StickRight] = StickRight;
             result[(int)Button.Select] = Select;
             result[(int)Button.Accept] = Accept;
             result[(int)Button.Cancel] = Cancel;

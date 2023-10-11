@@ -2,7 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.0] - 2022-11-29
+## [1.0.3] - 2022-11-29
+- Added Stick buttons
+
+## [1.0.0] - 2022-11-29
 
 ### Added
  - Initial release
