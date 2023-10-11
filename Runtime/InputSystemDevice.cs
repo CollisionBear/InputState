@@ -80,8 +80,8 @@ namespace CollisionBear.InputState
             buttonStates[(int)Button.BumberLeft].SetState(GamePad.leftShoulder);
             buttonStates[(int)Button.BumberRight].SetState(GamePad.rightShoulder);
 
-            buttonStates[(int)Button.StickLeft] = SetState(GamePad.leftStickButton);
-            buttonStates[(int)Button.StickRight] = SetState(GamePad.rightStickButton);
+            buttonStates[(int)Button.StickLeft].SetState(GamePad.leftStickButton);
+            buttonStates[(int)Button.StickRight].SetState(GamePad.rightStickButton);
 
             buttonStates[(int)Button.Start].SetState(GamePad.startButton);
             buttonStates[(int)Button.Select].SetState(GamePad.selectButton);
