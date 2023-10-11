@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CollisionBear.InputState
 {
-    [CreateAssetMenu(fileName = "New Icon set", menuName = "MageQuest/Input/Icon Set")]
+    [CreateAssetMenu(fileName = "New Icon set", menuName = "CollisionBear/Input/Icon Set")]
     public class InputIconSet : ScriptableObject
     {
         public InputDeviceType Type = InputDeviceType.Unknown;

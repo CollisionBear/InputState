@@ -11,8 +11,15 @@ namespace CollisionBear.InputState
 
     public class InputState
     {
-        public static List<ButtonState> GroupedDownState = new List<ButtonState> { ButtonState.Down, ButtonState.Pressed };
-        public static List<ButtonState> GroupedUpState = new List<ButtonState> { ButtonState.Up, ButtonState.Released };
+        public static List<KeyState> GroupedDownState = new List<KeyState> {
+            KeyState.Down,
+            KeyState.Pressed
+        }
+        ;
+        public static List<KeyState> GroupedUpState = new List<KeyState> {
+            KeyState.Up, 
+            KeyState.Released
+        };
 
         public InputType Type;
         public Vector2 LeftStick;
@@ -26,17 +33,25 @@ namespace CollisionBear.InputState
         {
             Type = type;
             ButtonStates = new ButtonState[ButtonUtils.ButtonCount];
+            for(int i = 0; i< ButtonStates.Length; i ++) {
+                ButtonStates[i] = new ButtonState();
+            }
+
             DirectionButtonStates = new ButtonState[ButtonUtils.ButtonCount];
+            for(int i = 0; i < DirectionButtonStates.Length; i ++) {
+                DirectionButtonStates[i] = new ButtonState();
+            }
         }
 
         public ButtonState GetButtonState(Button button) => ButtonStates[(int)button];
-        public bool GetButtonDown(Button button) => GroupedDownState.Contains(ButtonStates[(int)button]);
-        public bool GetButtonUp(Button button) => GroupedUpState.Contains(ButtonStates[(int)button]);
-        public bool GetButtonPressed(Button button) => ButtonStates[(int)button] == ButtonState.Pressed;
-        public bool GetButtonReleased(Button button) =>ButtonStates[(int)button] == ButtonState.Released;
-        public bool GetButtonDown(DirectionButton button) => GroupedDownState.Contains(DirectionButtonStates[(int)button]);
-        public bool GetButtonUp(DirectionButton button) => GroupedUpState.Contains(DirectionButtonStates[(int)button]);
-        public bool GetButtonPressed(DirectionButton button) => DirectionButtonStates[(int)button] == ButtonState.Pressed;
-        public bool GetButtonReleased(DirectionButton button) => DirectionButtonStates[(int)button] == ButtonState.Released;
+        public float GetButtonTime(Button button) => ButtonStates[(int)button].Time;
+        public bool GetButtonDown(Button button) => GroupedDownState.Contains(ButtonStates[(int)button].State);
+        public bool GetButtonUp(Button button) => GroupedUpState.Contains(ButtonStates[(int)button].State);
+        public bool GetButtonPressed(Button button) => ButtonStates[(int)button].State == KeyState.Pressed;
+        public bool GetButtonReleased(Button button) =>ButtonStates[(int)button].State == KeyState.Released;
+        public bool GetButtonDown(DirectionButton button) => GroupedDownState.Contains(DirectionButtonStates[(int)button].State);
+        public bool GetButtonUp(DirectionButton button) => GroupedUpState.Contains(DirectionButtonStates[(int)button].State);
+        public bool GetButtonPressed(DirectionButton button) => DirectionButtonStates[(int)button].State == KeyState.Pressed;
+        public bool GetButtonReleased(DirectionButton button) => DirectionButtonStates[(int)button].State == KeyState.Released;
     }
 }
