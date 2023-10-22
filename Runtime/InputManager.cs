@@ -89,7 +89,7 @@ namespace CollisionBear.InputState
         {
             var allKeyboardDeviceInstances = GetAllKeyboardDeviceInstances();
 
-            var currentActiveDevice = allKeyboardDeviceInstances.FirstOrDefault(i => i.Disabled());
+            var currentActiveDevice = allKeyboardDeviceInstances.FirstOrDefault(i => !i.Disabled());
             if(currentActiveDevice == null) {
                 Debug.LogWarning("No active KeyboardInputDevice");
                 return;
