@@ -64,6 +64,60 @@ namespace CollisionBear.InputState
             InputSystem.onDeviceChange -= OnDeviceChange;
         }
 
+        public void DebugAddNewKeyboardDevice()
+        {
+            var keyboardDeviceInstance = GetKeyboardDeviceInstance();
+            if(keyboardDeviceInstance == null) {
+                Debug.LogWarning("Failed to find KeyboardInputDevice");
+                return;
+            }
+
+            keyboardDeviceInstance.DebugDisable();
+            var deviceInstance = keyboardDeviceInstance.InputDevice.CreateInstance(DefaultInputHandler, IconSetProvider, this);
+            InputDeviceInstances.Add(deviceInstance);
+            OnInputDeviceAdded.Invoke(deviceInstance);
+        }
+
+        public void DebugToggleKeyboardDeviceIndex()
+        {
+            var allKeyboardDeviceInstances = GetAllKeyboardDeviceInstances();
+
+            var currentActiveDevice = allKeyboardDeviceInstances.FirstOrDefault(i => i.Disabled());
+            if(currentActiveDevice == null) {
+                Debug.LogWarning("No active KeyboardInputDevice");
+                return;
+            }
+
+            var currentIndex = allKeyboardDeviceInstances.IndexOf(currentActiveDevice);
+            var nextIndex = (currentIndex +1) % allKeyboardDeviceInstances.Count;
+
+            allKeyboardDeviceInstances[currentIndex].Disabled();
+            allKeyboardDeviceInstances[nextIndex].Disabled();
+        }
+
+        private InputDeviceInstance GetKeyboardDeviceInstance()
+        {
+            foreach(var deviceInstance in InputDeviceInstances) {
+                if(deviceInstance.InputDevice.GetDeviceType() == InputDeviceType.Keyboard) {
+                    return deviceInstance;
+                }
+            }
+
+            return null;
+        }
+
+        private List<InputDeviceInstance> GetAllKeyboardDeviceInstances()
+        {
+            var result = new List<InputDeviceInstance>();
+            foreach (var deviceInstance in InputDeviceInstances) {
+                if (deviceInstance.InputDevice.GetDeviceType() == InputDeviceType.Keyboard) {
+                    result.Add(deviceInstance);
+                }
+            }
+
+            return result;
+        }
+
         private void InitializeInputDevices(IEnumerable<IInputDevice> initialInputDevices, IIconSetProvider iconSetProvider)
         {
             OnInputDeviceAdded = new InputDeviceEvent();

@@ -10,6 +10,7 @@ namespace CollisionBear.InputState
         public IInputHandler CurrentInputHandler;
         public IInWorldPosition InWorldPosition;
 
+        private bool IsDisabled;
         private InputManager InputManager;
 
         public virtual void SetDevice(IInputDevice inputDevice, IInputHandler inputHandler, IIconSetProvider iconSetProvider, InputManager inputManager)
@@ -43,11 +44,23 @@ namespace CollisionBear.InputState
 
         public void Update()
         {
-            if(CurrentInputHandler == null) {
+            if(CurrentInputHandler == null || IsDisabled) {
                 return;
             }
 
             CurrentInputHandler.TakeInput(InputDevice.UpdateInputState(this), this);
         }
+
+        public void DebugDisable()
+        {
+            IsDisabled = true;
+        }
+
+        public void DebugEnable()
+        {
+            IsDisabled = false;
+        }
+
+        public bool Disabled() => IsDisabled;
     }
 }
