@@ -10,6 +10,8 @@ namespace CollisionBear.InputState
     {
         public const int InvalidIndex = -1;
 
+        private int MaxKeyboardDeviceCount = 4;
+
         public static readonly List<Button> ActionButtonList = new List<Button> {
                 Button.Action00,
                 Button.Action01,
@@ -69,6 +71,11 @@ namespace CollisionBear.InputState
             var keyboardDeviceInstance = GetKeyboardDeviceInstance();
             if(keyboardDeviceInstance == null) {
                 Debug.LogWarning("Failed to find KeyboardInputDevice");
+                return;
+            }
+
+            if(GetAllKeyboardDeviceInstances().Count >= MaxKeyboardDeviceCount) {
+                Debug.LogWarning("Max KeyboardInputDevice count reached");
                 return;
             }
 
