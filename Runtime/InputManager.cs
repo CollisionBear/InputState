@@ -98,7 +98,7 @@ namespace CollisionBear.InputState
         private InputDeviceInstance GetKeyboardDeviceInstance()
         {
             foreach(var deviceInstance in InputDeviceInstances) {
-                if(deviceInstance.InputDevice.GetDeviceType() == InputDeviceType.Keyboard) {
+                if(deviceInstance.InputDevice.GetDeviceType() == InputDeviceType.Keyboard && !deviceInstance.Disabled()) {
                     return deviceInstance;
                 }
             }
