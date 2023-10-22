@@ -98,8 +98,8 @@ namespace CollisionBear.InputState
             var currentIndex = allKeyboardDeviceInstances.IndexOf(currentActiveDevice);
             var nextIndex = (currentIndex +1) % allKeyboardDeviceInstances.Count;
 
-            allKeyboardDeviceInstances[currentIndex].Disabled();
-            allKeyboardDeviceInstances[nextIndex].Disabled();
+            allKeyboardDeviceInstances[currentIndex].DebugDisable();
+            allKeyboardDeviceInstances[nextIndex].DebugEnable();
         }
 
         private InputDeviceInstance GetKeyboardDeviceInstance()
