@@ -18,6 +18,12 @@ namespace CollisionBear.InputState
             (int)Button.Action05,
             (int)Button.Action06,
             (int)Button.Action07,
+            (int)Button.Action08,
+            (int)Button.Action09,
+            (int)Button.Action10,
+            (int)Button.Action11,
+            (int)Button.Action12,
+            (int)Button.Action13,
             (int)Button.TriggerLeft,
             (int)Button.TriggerRight,
             (int)Button.BumberLeft,
@@ -51,6 +57,12 @@ namespace CollisionBear.InputState
         public KeyCode Action05 = KeyCode.Q;
         public KeyCode Action06 = KeyCode.None;
         public KeyCode Action07 = KeyCode.None;
+        public KeyCode Action08 = KeyCode.None;
+        public KeyCode Action09 = KeyCode.None;
+        public KeyCode Action10 = KeyCode.None;
+        public KeyCode Action11 = KeyCode.None;
+        public KeyCode Action12 = KeyCode.None;
+        public KeyCode Action13 = KeyCode.None;
 
         public KeyCode LeftBumper = KeyCode.LeftShift;
         public KeyCode RightBumper = KeyCode.RightShift;
