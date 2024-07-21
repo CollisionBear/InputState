@@ -38,7 +38,7 @@ namespace CollisionBear.InputState
         public static InputManager Instance;
         public class InputDeviceEvent : UnityEvent<InputDeviceInstance> { }
 
-        public static InputManager InitializeInputManager(IEnumerable<IInputDevice> initialInputDevices, IIconSetProvider iconSetProvider, IInputHandler defaultInputHandler)
+        public static InputManager InitializeInputManager(IEnumerable<IInputDevice> initialInputDevices, IIconSetProvider iconSetProvider, IInputHandler defaultInputHandler, InputDeviceConfiguration deviceConfiguration)
         {
             if (defaultInputHandler == null) {
                 throw new System.ArgumentNullException("InitialInputDevices is null");
@@ -48,9 +48,13 @@ namespace CollisionBear.InputState
                 throw new System.ArgumentNullException("DefaultInputHandler is null");
             }
 
+            if (deviceConfiguration == null) {
+                throw new System.ArgumentNullException("DefaultConfiguration is null");
+            }
+
             var inputManager = new GameObject("InputManager");
             Instance = inputManager.AddComponent<InputManager>();
-            Instance.Initialize(initialInputDevices, iconSetProvider, defaultInputHandler);
+            Instance.Initialize(initialInputDevices, iconSetProvider, defaultInputHandler, deviceConfiguration);
             GameObject.DontDestroyOnLoad(inputManager);
             return Instance;
         }
@@ -65,11 +69,13 @@ namespace CollisionBear.InputState
 
         public IIconSetProvider IconSetProvider;
         public IInputHandler DefaultInputHandler;
+        public InputDeviceConfiguration DefaultConfiguration;
 
-        public void Initialize(IEnumerable<IInputDevice> initialInputDevices, IIconSetProvider iconSetProvider, IInputHandler defaultInputHandler)
+        public void Initialize(IEnumerable<IInputDevice> initialInputDevices, IIconSetProvider iconSetProvider, IInputHandler defaultInputHandler, InputDeviceConfiguration defaultConfiguration)
         {
             IconSetProvider = iconSetProvider;
             DefaultInputHandler = defaultInputHandler;
+            DefaultConfiguration = defaultConfiguration;
             InitializeInputDevices(initialInputDevices, iconSetProvider);
 
             InputSystem.onDeviceChange += OnDeviceChange;
@@ -155,7 +161,7 @@ namespace CollisionBear.InputState
 
             try {
                 foreach (var gamePad in Gamepad.all) {
-                    inputDevices.Add(new InputSystemDevice(gamePad));
+                    inputDevices.Add(new InputSystemDevice(gamePad, DefaultConfiguration));
                 }
             } catch (System.Exception) {
                 Debug.LogWarning("Failed to fetch InputSystem's input devices");
@@ -191,7 +197,7 @@ namespace CollisionBear.InputState
 
             Debug.Log($"Device {device.deviceId} connected");
 
-            var inputDevice = new InputSystemDevice(changedGamePad);
+            var inputDevice = new InputSystemDevice(changedGamePad, DefaultConfiguration);
             if (inputDevice.Setup()) {
                 var deviceInstance = inputDevice.CreateInstance(DefaultInputHandler, IconSetProvider, this);
                 InputDeviceInstances.Add(deviceInstance);

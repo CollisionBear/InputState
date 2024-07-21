@@ -13,9 +13,12 @@ namespace CollisionBear.InputState
 
         protected InputState InputState;
 
-        public InputSystemDevice(Gamepad gamePad)
+        private InputDeviceConfiguration Configuration;
+
+        public InputSystemDevice(Gamepad gamePad, InputDeviceConfiguration configuration)
         {
             GamePad = gamePad;
+            Configuration = configuration;
         }
 
         public InputDeviceType GetDeviceType()
@@ -26,7 +29,7 @@ namespace CollisionBear.InputState
                 return InputDeviceType.Xbox;
             }
 
-            // Fallback
+            // Fall back
             return InputDeviceType.Xbox;
         }
 
