@@ -6,6 +6,7 @@ namespace CollisionBear.InputState
     [CreateAssetMenu(fileName = "New Input Device Configuration", menuName = "CollisionBear/Input/Input Device Configuration")]
     public class InputDeviceConfiguration : ScriptableObject
     {
+        [Header("Action buttons")]
         public GamepadButton Action00 = GamepadButton.A;
         public GamepadButton Action01 = GamepadButton.B;
         public GamepadButton Action02 = GamepadButton.X;
@@ -21,6 +22,7 @@ namespace CollisionBear.InputState
         public GamepadButton Action12 = GamepadButton.X;
         public GamepadButton Action13 = GamepadButton.Y;
 
+        [Header("Bumpers")]
         public GamepadButton BumperLeft = GamepadButton.LeftShoulder;
         public GamepadButton BumperRight = GamepadButton.RightShoulder;
 
@@ -36,15 +38,10 @@ namespace CollisionBear.InputState
         public GamepadButton Accept = GamepadButton.A;
         public GamepadButton Cancel = GamepadButton.B;
 
-        [Header("Trigger thresholds")]
-        [Range(0f, 1f)]
-        public float TriggerThreshold = 0.8f;
-        [Range(0f, 1f)]
-        public float DirectionButtonThreshold = 0.6f;
-
-        public GamepadButton[] CreateButtonMapping()
+        public GamepadButton[] GetButtonMapping()
         {
             var result = new GamepadButton[ButtonUtils.ButtonCount];
+
             result[(int)Button.Action00] = Action00;
             result[(int)Button.Action01] = Action01;
             result[(int)Button.Action02] = Action02;
@@ -77,6 +74,5 @@ namespace CollisionBear.InputState
 
             return result;
         }
-
     }
 }

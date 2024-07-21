@@ -12,29 +12,6 @@ namespace CollisionBear.InputState
 
         private int MaxKeyboardDeviceCount = 4;
 
-        public static readonly List<Button> ActionButtonList = new List<Button> {
-                Button.Action00,
-                Button.Action01,
-                Button.Action02,
-                Button.Action03,
-                Button.Action04,
-                Button.Action05,
-                Button.Action06,
-                Button.Action07,
-                Button.Action08,
-                Button.Action09,
-                Button.Action10,
-                Button.Action11,
-                Button.Action12,
-                Button.Action13,
-                Button.TriggerLeft,
-                Button.TriggerRight,
-                Button.BumberLeft,
-                Button.BumberRight,
-                Button.StickLeft,
-                Button.StickRight
-        };
-
         public static InputManager Instance;
         public class InputDeviceEvent : UnityEvent<InputDeviceInstance> { }
 

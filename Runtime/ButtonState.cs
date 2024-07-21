@@ -22,8 +22,8 @@ namespace CollisionBear.InputState
             SetState(GetKeyStateForButton(buttonControl));
         }
 
-        public void SetState(ButtonControl buttonControl, float value, float directionButtonTreshold) {  
-            SetState(Max(GetKeyStateForButton(buttonControl), GetLeftStickKeyState(value, directionButtonTreshold)));
+        public void SetDirectionState(ButtonControl buttonControl, float value, float directionButtonThreshold) {  
+            SetState(Max(GetKeyStateForButton(buttonControl), GetLeftStickKeyState(value, directionButtonThreshold)));
         }
 
         private void SetState(KeyState newState) {

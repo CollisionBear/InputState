@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace CollisionBear.InputState
 {
@@ -8,20 +9,63 @@ namespace CollisionBear.InputState
         public const float TriggerTreshold = 0.8f;
         public const float DirectionButtonTreshold = 0.6f;
 
+        private static GamepadButton[] GetGamepadButtons() => new GamepadButton[] {
+            GamepadButton.DpadUp,
+            GamepadButton.DpadDown,
+            GamepadButton.DpadLeft,
+            GamepadButton.DpadRight,
+            GamepadButton.North,
+            GamepadButton.East,
+            GamepadButton.South,
+            GamepadButton.West,
+            GamepadButton.LeftStick,
+            GamepadButton.RightStick,
+            GamepadButton.LeftShoulder,
+            GamepadButton.RightShoulder,
+            GamepadButton.Start,
+            GamepadButton.Select
+        };
+
+        private static GamepadButton[] GetGamepadTriggers() => new GamepadButton[] {
+            GamepadButton.LeftTrigger,
+            GamepadButton.RightTrigger
+        };
+
+        private static ButtonState[] GetInternalButtonState(GamepadButton[] buttonMappings, InputState inputState)
+        {
+            var result = new ButtonState[64];
+
+            foreach(var button in ButtonUtils.ActionButtonList) {
+                result[(int)buttonMappings[(int)button]] = inputState.ButtonStates[(int)button];
+            }
+           
+            return result;
+        }
+
         public Gamepad GamePad;
         public string Name => GamePad.name;
 
-        protected InputState InputState;
+        private InputState InputState;
+        private InputDeviceType DeviceType;
 
-        private InputDeviceConfiguration Configuration;
+        private GamepadButton[] GamepadButtons;
+        private GamepadButton[] GamepadTriggers;
+        private ButtonState[] InternalButtonState;
+
+        private GamepadButton[] InternalMappingTable;
 
         public InputSystemDevice(Gamepad gamePad, InputDeviceConfiguration configuration)
         {
             GamePad = gamePad;
-            Configuration = configuration;
+            DeviceType = ReadDeviceType();
+
+            GamepadButtons = GetGamepadButtons();
+            GamepadTriggers = GetGamepadTriggers();
+
+            InternalMappingTable = configuration.GetButtonMapping();
         }
 
-        public InputDeviceType GetDeviceType()
+        private InputDeviceType ReadDeviceType()
         {
             if (GamePad is UnityEngine.InputSystem.DualShock.DualShockGamepad) {
                 return InputDeviceType.Playstation;
@@ -32,6 +76,8 @@ namespace CollisionBear.InputState
             // Fall back
             return InputDeviceType.Xbox;
         }
+
+        public InputDeviceType GetDeviceType() => DeviceType;
 
         public void SetColor(InputDeviceInstance instance, Color color)
         {
@@ -55,6 +101,7 @@ namespace CollisionBear.InputState
         {
             // Create a reusable InputState object
             InputState = new InputState(InputType.GamePad);
+            InternalButtonState = GetInternalButtonState(InternalMappingTable, InputState);
 
             return true;
         }
@@ -64,49 +111,33 @@ namespace CollisionBear.InputState
             InputState.LeftStick = GamePad.leftStick.ReadValue();
             InputState.RightStick = GamePad.rightStick.ReadValue();
 
-            ReadButtonStates(InputState.ButtonStates);
+            ReadButtonStates();
             ReadDirectionButtonStates(InputState.DirectionButtonStates);
+
             return InputState;
         }
 
-        public InputState GetInputState()
+        public InputState GetInputState() => InputState;
+
+        private void ReadButtonStates()
         {
-            return InputState;
-        }
+            foreach (var button in GamepadButtons) {
+                InternalButtonState[(int)button].SetState(GamePad[button]);
+            }
 
-        protected void ReadButtonStates(ButtonState[] buttonStates)
-        {
-            buttonStates[(int)Button.TriggerLeft].SetStateFromTrigger(GamePad.leftTrigger, TriggerTreshold);
-            buttonStates[(int)Button.TriggerRight].SetStateFromTrigger(GamePad.rightTrigger, TriggerTreshold);
-
-            buttonStates[(int)Button.BumberLeft].SetState(GamePad.leftShoulder);
-            buttonStates[(int)Button.BumberRight].SetState(GamePad.rightShoulder);
-
-            buttonStates[(int)Button.StickLeft].SetState(GamePad.leftStickButton);
-            buttonStates[(int)Button.StickRight].SetState(GamePad.rightStickButton);
-
-            buttonStates[(int)Button.Start].SetState(GamePad.startButton);
-            buttonStates[(int)Button.Select].SetState(GamePad.selectButton);
-            buttonStates[(int)Button.Action00].SetState(GamePad.aButton);
-            buttonStates[(int)Button.Action01].SetState(GamePad.bButton);
-            buttonStates[(int)Button.Action02].SetState(GamePad.xButton);
-            buttonStates[(int)Button.Action03].SetState(GamePad.yButton);
-            buttonStates[(int)Button.Action04].SetState(GamePad.dpad.up);
-            buttonStates[(int)Button.Action05].SetState(GamePad.dpad.down);
-            buttonStates[(int)Button.Action06].SetState(GamePad.dpad.left);
-            buttonStates[(int)Button.Action07].SetState(GamePad.dpad.right);
-            buttonStates[(int)Button.Accept].SetState(GamePad.aButton);
-            buttonStates[(int)Button.Cancel].SetState(GamePad.bButton); 
+            foreach (var button in GamepadTriggers) {
+                InternalButtonState[(int)button].SetStateFromTrigger(GamePad[button], 0.75f);
+            }
         }
 
         protected void ReadDirectionButtonStates(ButtonState[] buttonStates)
         {
             var readLeftStick = GamePad.leftStick.ReadValue();
 
-            buttonStates[(int)DirectionButton.Up].SetState(GamePad.dpad.up, readLeftStick.y, DirectionButtonTreshold);
-            buttonStates[(int)DirectionButton.Down].SetState(GamePad.dpad.down, -readLeftStick.y, DirectionButtonTreshold);
-            buttonStates[(int)DirectionButton.Left].SetState(GamePad.dpad.left, -readLeftStick.x, DirectionButtonTreshold);
-            buttonStates[(int)DirectionButton.Right].SetState(GamePad.dpad.right, readLeftStick.x, DirectionButtonTreshold);
+            buttonStates[(int)DirectionButton.Up].SetDirectionState(GamePad.dpad.up, readLeftStick.y, DirectionButtonTreshold);
+            buttonStates[(int)DirectionButton.Down].SetDirectionState(GamePad.dpad.down, -readLeftStick.y, DirectionButtonTreshold);
+            buttonStates[(int)DirectionButton.Left].SetDirectionState(GamePad.dpad.left, -readLeftStick.x, DirectionButtonTreshold);
+            buttonStates[(int)DirectionButton.Right].SetDirectionState(GamePad.dpad.right, readLeftStick.x, DirectionButtonTreshold);
         }
     }
 }
