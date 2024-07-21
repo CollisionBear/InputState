@@ -17,8 +17,16 @@ namespace CollisionBear.InputState
                 Button.Action01,
                 Button.Action02,
                 Button.Action03,
+                Button.Action04,
+                Button.Action05,
+                Button.Action06,
+                Button.Action07,
                 Button.TriggerLeft,
-                Button.TriggerRight
+                Button.TriggerRight,
+                Button.BumberLeft,
+                Button.BumberRight,
+                Button.StickLeft,
+                Button.StickRight
         };
 
         public static InputManager Instance;
