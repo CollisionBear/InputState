@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
@@ -122,10 +123,18 @@ namespace CollisionBear.InputState
         private void ReadButtonStates()
         {
             foreach (var button in GamepadButtons) {
+                if (InternalButtonState[(int)button] == null) {
+                    continue;
+                }
+
                 InternalButtonState[(int)button].SetState(GamePad[button]);
             }
 
             foreach (var button in GamepadTriggers) {
+                if (InternalButtonState[(int)button] == null) {
+                    continue;
+                }
+
                 InternalButtonState[(int)button].SetStateFromTrigger(GamePad[button], 0.75f);
             }
         }

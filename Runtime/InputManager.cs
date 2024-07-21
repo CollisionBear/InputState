@@ -167,6 +167,9 @@ namespace CollisionBear.InputState
         private void AddDevice(InputDevice device)
         {
             var changedGamePad = GetGamePadForDeviceId(device.deviceId);
+            if(changedGamePad == null) {
+                return;
+            }
 
             if (ContainsDeviceWithId(changedGamePad.deviceId)) {
                 return;
