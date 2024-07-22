@@ -1,4 +1,4 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -7,8 +7,8 @@ namespace CollisionBear.InputState
 {
     public class InputSystemDevice : IInputDevice
     {
-        public const float TriggerTreshold = 0.8f;
-        public const float DirectionButtonTreshold = 0.6f;
+        public const float TriggerThreshold = 0.8f;
+        public const float DirectionButtonThreshold = 0.6f;
 
         private static GamepadButton[] GetGamepadButtons() => new GamepadButton[] {
             GamepadButton.DpadUp,
@@ -32,28 +32,17 @@ namespace CollisionBear.InputState
             GamepadButton.RightTrigger
         };
 
-        private static ButtonState[] GetInternalButtonState(GamepadButton[] buttonMappings, InputState inputState)
-        {
-            var result = new ButtonState[64];
-
-            foreach(var button in ButtonUtils.ActionButtonList) {
-                result[(int)buttonMappings[(int)button]] = inputState.ButtonStates[(int)button];
-            }
-           
-            return result;
-        }
-
         public Gamepad GamePad;
         public string Name => GamePad.name;
 
-        private InputState InputState;
         private InputDeviceType DeviceType;
 
         private GamepadButton[] GamepadButtons;
         private GamepadButton[] GamepadTriggers;
-        private ButtonState[] InternalButtonState;
 
-        private GamepadButton[] InternalMappingTable;
+        private InputState InputState;
+        private ButtonState[] ButtonStates;
+        private GamepadButton[] MappedButtons;
 
         public InputSystemDevice(Gamepad gamePad, InputDeviceConfiguration configuration)
         {
@@ -62,8 +51,7 @@ namespace CollisionBear.InputState
 
             GamepadButtons = GetGamepadButtons();
             GamepadTriggers = GetGamepadTriggers();
-
-            InternalMappingTable = configuration.GetButtonMapping();
+            MappedButtons = configuration.GetButtonMapping();
         }
 
         private InputDeviceType ReadDeviceType()
@@ -102,9 +90,38 @@ namespace CollisionBear.InputState
         {
             // Create a reusable InputState object
             InputState = new InputState(InputType.GamePad);
-            InternalButtonState = GetInternalButtonState(InternalMappingTable, InputState);
+            SetupButtonStates(InputState);
 
             return true;
+        }
+
+        private List<GamepadButton> AllButtons()
+        {
+            var result = new List<GamepadButton>();
+
+            result.AddRange(GamepadButtons);
+            result.AddRange(GamepadTriggers);
+
+            return result;
+        }
+
+        private void SetupButtonStates(InputState inputState)
+        {
+            ButtonStates = new ButtonState[GamepadButtons.Length + GamepadTriggers.Length];
+            for (int i = 0; i < GamepadButtons.Length; i ++) {
+                ButtonStates[i] = new ButtonState();
+            }
+
+            for (int i = 0; i < GamepadTriggers.Length; i++) {
+                ButtonStates[i + GamepadButtons.Length] = new ButtonState();
+            }
+            var allbuttons = AllButtons();
+
+            foreach (var button in ButtonUtils.ButtonIndices) {
+                var index = allbuttons.IndexOf(MappedButtons[(int)button]);
+
+                 inputState.ButtonStates[(int)button] = ButtonStates[index];
+            }
         }
 
         public InputState UpdateInputState(InputDeviceInstance instance)
@@ -122,20 +139,12 @@ namespace CollisionBear.InputState
 
         private void ReadButtonStates()
         {
-            foreach (var button in GamepadButtons) {
-                if (InternalButtonState[(int)button] == null) {
-                    continue;
-                }
-
-                InternalButtonState[(int)button].SetState(GamePad[button]);
+            for (int i = 0; i < GamepadButtons.Length; i++) {
+                ButtonStates[i].SetState(GamePad[GamepadButtons[i]]);
             }
 
-            foreach (var button in GamepadTriggers) {
-                if (InternalButtonState[(int)button] == null) {
-                    continue;
-                }
-
-                InternalButtonState[(int)button].SetStateFromTrigger(GamePad[button], 0.75f);
+            for (int i = 0; i < GamepadTriggers.Length; i++) {
+                ButtonStates[i + GamepadButtons.Length].SetStateFromTrigger(GamePad[GamepadTriggers[i]], TriggerThreshold);
             }
         }
 
@@ -143,10 +152,10 @@ namespace CollisionBear.InputState
         {
             var readLeftStick = GamePad.leftStick.ReadValue();
 
-            buttonStates[(int)DirectionButton.Up].SetDirectionState(GamePad.dpad.up, readLeftStick.y, DirectionButtonTreshold);
-            buttonStates[(int)DirectionButton.Down].SetDirectionState(GamePad.dpad.down, -readLeftStick.y, DirectionButtonTreshold);
-            buttonStates[(int)DirectionButton.Left].SetDirectionState(GamePad.dpad.left, -readLeftStick.x, DirectionButtonTreshold);
-            buttonStates[(int)DirectionButton.Right].SetDirectionState(GamePad.dpad.right, readLeftStick.x, DirectionButtonTreshold);
+            buttonStates[(int)DirectionButton.Up].SetDirectionState(GamePad.dpad.up, readLeftStick.y, DirectionButtonThreshold);
+            buttonStates[(int)DirectionButton.Down].SetDirectionState(GamePad.dpad.down, -readLeftStick.y, DirectionButtonThreshold);
+            buttonStates[(int)DirectionButton.Left].SetDirectionState(GamePad.dpad.left, -readLeftStick.x, DirectionButtonThreshold);
+            buttonStates[(int)DirectionButton.Right].SetDirectionState(GamePad.dpad.right, readLeftStick.x, DirectionButtonThreshold);
         }
     }
 }

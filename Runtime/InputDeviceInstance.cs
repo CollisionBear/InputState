@@ -10,8 +10,6 @@ namespace CollisionBear.InputState
         public IInputHandler CurrentInputHandler;
         public IInWorldPosition InWorldPosition;
 
-        private InputDeviceConfiguration DeviceConfiguration;
-
         private bool IsDisabled;
         private InputManager InputManager;
 

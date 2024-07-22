@@ -33,9 +33,6 @@ namespace CollisionBear.InputState
         {
             Type = type;
             ButtonStates = new ButtonState[ButtonUtils.ButtonCount];
-            for(int i = 0; i< ButtonStates.Length; i ++) {
-                ButtonStates[i] = new ButtonState();
-            }
 
             DirectionButtonStates = new ButtonState[ButtonUtils.ButtonCount];
             for(int i = 0; i < DirectionButtonStates.Length; i ++) {

@@ -2,39 +2,12 @@ using UnityEngine;
 
 namespace CollisionBear.InputState
 {
-    [CreateAssetMenu(fileName = "New Keyboard", menuName = "CollisionBear/Input/Keyboard Device")]
+    [CreateAssetMenu(fileName = "New Keyboard", menuName = "InputState/Keyboard Device")]
     public class KeyboardDevice : ScriptableObject, IInputDevice
     {
         public MouseMarker MouseMarkerPrefab;
 
         private int GroundLayerMask;
-
-        private static readonly int[] ButtonIndices = new int[] {
-            (int)Button.Action00,
-            (int)Button.Action01,
-            (int)Button.Action02,
-            (int)Button.Action03,
-            (int)Button.Action04,
-            (int)Button.Action05,
-            (int)Button.Action06,
-            (int)Button.Action07,
-            (int)Button.Action08,
-            (int)Button.Action09,
-            (int)Button.Action10,
-            (int)Button.Action11,
-            (int)Button.Action12,
-            (int)Button.Action13,
-            (int)Button.TriggerLeft,
-            (int)Button.TriggerRight,
-            (int)Button.BumberLeft,
-            (int)Button.BumberRight,
-            (int)Button.StickLeft,
-            (int)Button.StickRight,
-            (int)Button.Start,
-            (int)Button.Select,
-            (int)Button.Accept,
-            (int)Button.Cancel
-        };
 
         private static readonly int[] DirectionalButtonIndices = new int[] {
             (int)DirectionButton.Up,
@@ -50,7 +23,7 @@ namespace CollisionBear.InputState
 
         [Header("Button Mappings")]
         public KeyCode Action00 = KeyCode.Alpha1;
-        public KeyCode Action01 = KeyCode.Alpha1;
+        public KeyCode Action01 = KeyCode.Alpha2;
         public KeyCode Action02 = KeyCode.Alpha3;
         public KeyCode Action03 = KeyCode.Alpha4;
         public KeyCode Action04 = KeyCode.E;
@@ -94,15 +67,11 @@ namespace CollisionBear.InputState
         private KeyCode[] DirectionWasdButtonMappings;
 
         private InputState InputState;
+        private ButtonState[] ButtonStates;
 
-        public string Name {
-            get { return name; }
-        }
+        public string Name => name;
 
-        public InputDeviceType GetDeviceType()
-        {
-            return InputDeviceType.Keyboard;
-        }
+        public InputDeviceType GetDeviceType() =>  InputDeviceType.Keyboard;
 
         public InputDeviceInstance CreateInstance(IInputHandler inputHandler, IIconSetProvider iconSetProvider, InputManager inputManager)
         {
@@ -118,13 +87,14 @@ namespace CollisionBear.InputState
         {
             GroundLayerMask = LayerMask.GetMask("Ground");
             InputState = new InputState(InputType.Keyboard);
+            SetupButtonStates(InputState);
 
             try {
                 ButtonMappings = SetupKeyButtonMappings();
                 DirectionArrowButtonMappings = SetupArrowKeyDirectionButtonMappings();
                 DirectionWasdButtonMappings = SetupWasdKeyDirectionsButtonMappings();
 
-                foreach (var button in ButtonIndices) {
+                foreach (var button in ButtonUtils.ButtonIndices) {
                     InputState.ButtonStates[button].State = KeyState.Up;
                 }
 
@@ -139,13 +109,23 @@ namespace CollisionBear.InputState
             }
         }
 
+        private void SetupButtonStates(InputState inputState)
+        {
+            ButtonStates = new ButtonState[ButtonUtils.ButtonIndices.Length];
+            for(int i = 0; i < ButtonStates.Length; i ++) {
+                ButtonStates[i] = new ButtonState();
+
+                inputState.ButtonStates[ButtonUtils.ButtonIndices[i]] = ButtonStates[i];
+            }
+        }
+
         public InputState UpdateInputState(InputDeviceInstance instance)
         {
             var keyboardInstance = (KeyboardDeviceInstance)instance;
             InputState.LeftStick = ReadLeftStick();
             InputState.MousePosition = InWorldMousePosition(instance.InWorldPosition?.GetPosition());
             InputState.RightStick = ReadRightStick(InputState.MousePosition, instance.InWorldPosition?.GetPosition());
-            ReadButtonState(InputState.ButtonStates);
+            ReadButtonState();
             ReadDirectionButtonState(InputState.DirectionButtonStates);
 
             if (keyboardInstance.MouseMarker != null) {
@@ -155,10 +135,7 @@ namespace CollisionBear.InputState
             return InputState;
         }
 
-        public InputState GetInputState()
-        {
-            return InputState;
-        }
+        public InputState GetInputState() => InputState;
 
         private KeyCode[] SetupKeyButtonMappings()
         {
@@ -173,11 +150,11 @@ namespace CollisionBear.InputState
             result[(int)Button.Action07] = Action07;
             result[(int)Button.TriggerLeft] = LeftTrigger;
             result[(int)Button.TriggerRight] = RightTrigger;
-            result[(int)Button.Start] = Start;
             result[(int)Button.BumberLeft] = LeftBumper;
             result[(int)Button.BumberRight] = RightBumper;
             result[(int)Button.StickLeft] = StickLeft;
             result[(int)Button.StickRight] = StickRight;
+            result[(int)Button.Start] = Start;
             result[(int)Button.Select] = Select;
             result[(int)Button.Accept] = Accept;
             result[(int)Button.Cancel] = Cancel;
@@ -261,10 +238,10 @@ namespace CollisionBear.InputState
             return new Vector2(direction.x, direction.z);
         }
 
-        private void ReadButtonState(ButtonState[] buttonStates)
+        private void ReadButtonState()
         {
-            foreach (var button in ButtonIndices) {
-                buttonStates[button].SetState(ButtonMappings[button]);
+            for(int i = 0; i < ButtonStates.Length; i ++) {
+                ButtonStates[i].SetState(ButtonMappings[ButtonUtils.ButtonIndices[i]]);
             }
         }
 
