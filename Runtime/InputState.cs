@@ -50,5 +50,9 @@ namespace CollisionBear.InputState
         public bool GetButtonUp(DirectionButton button) => GroupedUpState.Contains(DirectionButtonStates[(int)button].State);
         public bool GetButtonPressed(DirectionButton button) => DirectionButtonStates[(int)button].State == KeyState.Pressed;
         public bool GetButtonReleased(DirectionButton button) => DirectionButtonStates[(int)button].State == KeyState.Released;
+        public void ConsumeButton(Button button)
+        {
+            ButtonStates[(int)button].State = KeyState.Consumed;
+        }
     }
 }
