@@ -9,6 +9,7 @@ namespace CollisionBear.InputState
         bool Setup();
         InputState UpdateInputState(InputDeviceInstance instance);
         InputState GetInputState();
+        void LateUpdate(InputDeviceInstance instance);
         InputDeviceType GetDeviceType();
         void SetColor(InputDeviceInstance instance, Color color);
     }

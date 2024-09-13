@@ -5,7 +5,15 @@ namespace CollisionBear.InputState
     [CreateAssetMenu(fileName = "New Keyboard", menuName = "InputState/Keyboard Device")]
     public class KeyboardDevice : ScriptableObject, IInputDevice
     {
+        public enum MouseMarkerUpdateType
+        {
+            Update = 0,
+            LateUpdate = 1,
+        }
+
+
         public MouseMarker MouseMarkerPrefab;
+        public MouseMarkerUpdateType MouseMarkerUpdate = MouseMarkerUpdateType.LateUpdate;
 
         private int GroundLayerMask;
 
@@ -128,8 +136,10 @@ namespace CollisionBear.InputState
             ReadButtonState();
             ReadDirectionButtonState(InputState.DirectionButtonStates);
 
-            if (keyboardInstance.MouseMarker != null) {
-                keyboardInstance.MouseMarker.SetPosition(InputState.MousePosition);
+            if (MouseMarkerUpdate == MouseMarkerUpdateType.Update) {
+                if (keyboardInstance.MouseMarker != null) {
+                    keyboardInstance.MouseMarker.SetPosition(InputState.MousePosition);
+                }
             }
 
             return InputState;
@@ -188,15 +198,15 @@ namespace CollisionBear.InputState
         {
             var result = new Vector2();
 
-            if (UnityEngine.Input.GetKey(UpStickButton)) {
+            if (Input.GetKey(UpStickButton)) {
                 result.y = 1;
-            } else if (UnityEngine.Input.GetKey(DownStickButton)) {
+            } else if (Input.GetKey(DownStickButton)) {
                 result.y = -1;
             }
 
-            if (UnityEngine.Input.GetKey(LeftStickButton)) {
+            if (Input.GetKey(LeftStickButton)) {
                 result.x = -1;
-            } else if (UnityEngine.Input.GetKey(RightStickButton)) {
+            } else if (Input.GetKey(RightStickButton)) {
                 result.x = 1;
             }
 
@@ -210,7 +220,7 @@ namespace CollisionBear.InputState
                 return Vector3.zero;
             }
 
-            Vector3 mouseOnScreenPosition = UnityEngine.Input.mousePosition;
+            Vector3 mouseOnScreenPosition = Input.mousePosition;
             var ray = gameCamera.ScreenPointToRay(mouseOnScreenPosition);
 
 
@@ -257,6 +267,16 @@ namespace CollisionBear.InputState
             var keyboardInstance = instance as KeyboardDeviceInstance;
             if (keyboardInstance.MouseMarker != null) {
                 keyboardInstance.MouseMarker.SetColor(color);
+            }
+        }
+
+        public void LateUpdate(InputDeviceInstance instance)
+        {
+            var keyboardInstance = instance as KeyboardDeviceInstance;
+            if (MouseMarkerUpdate == MouseMarkerUpdateType.LateUpdate) {
+                if (keyboardInstance.MouseMarker != null) {
+                    keyboardInstance.MouseMarker.SetPosition(InputState.MousePosition);
+                }
             }
         }
     }

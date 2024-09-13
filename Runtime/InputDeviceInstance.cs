@@ -42,13 +42,18 @@ namespace CollisionBear.InputState
         public virtual void EnableDevice() { }
         public virtual void DisableDevice() { }
 
-        public void Update()
+        private void Update()
         {
             if(CurrentInputHandler == null || IsDisabled) {
                 return;
             }
 
             CurrentInputHandler.TakeInput(InputDevice.UpdateInputState(this), this);
+        }
+
+        private void LateUpdate()
+        {
+            InputDevice.LateUpdate(this);
         }
 
         public void DebugDisable()
