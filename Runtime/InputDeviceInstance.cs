@@ -53,7 +53,7 @@ namespace CollisionBear.InputState
 
         private void LateUpdate()
         {
-            InputDevice.LateUpdate(this);
+            InputDevice.InputLateUpdate(this);
         }
 
         public void DebugDisable()

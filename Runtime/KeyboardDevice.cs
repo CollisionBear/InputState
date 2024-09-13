@@ -270,7 +270,7 @@ namespace CollisionBear.InputState
             }
         }
 
-        public void LateUpdate(InputDeviceInstance instance)
+        public void InputLateUpdate(InputDeviceInstance instance)
         {
             var keyboardInstance = instance as KeyboardDeviceInstance;
             if (MouseMarkerUpdate == MouseMarkerUpdateType.LateUpdate) {

@@ -158,6 +158,6 @@ namespace CollisionBear.InputState
             buttonStates[(int)DirectionButton.Right].SetDirectionState(GamePad.dpad.right, readLeftStick.x, DirectionButtonThreshold);
         }
 
-        public void LateUpdate(InputDeviceInstance instance) { }
+        public void InputLateUpdate(InputDeviceInstance instance) { }
     }
 }
