@@ -125,8 +125,6 @@ namespace CollisionBear.InputState {
             return InputState;
         }
 
-        public InputState GetInputState() => InputState;
-
         private void ReadButtonStates() {
             for (int i = 0; i < GamepadButtons.Length; i++) {
                 ButtonStates[i].SetState(GamePad[GamepadButtons[i]]);
@@ -147,5 +145,9 @@ namespace CollisionBear.InputState {
         }
 
         public void InputLateUpdate(InputDeviceInstance instance) { }
+
+        public void ConsumeKeyCode(KeyCode key) {
+            // TODO: Implement if needed. ONly valuable for the Keyboard device right now
+        }
     }
 }

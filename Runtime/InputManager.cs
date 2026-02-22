@@ -49,7 +49,7 @@ namespace CollisionBear.InputState {
         public IIconSetProvider IconSetProvider;
         public IInputHandler DefaultInputHandler;
 
-        private List<InputDeviceInstance> KeyboardInstances = new List<InputDeviceInstance>();
+        private KeyboardDeviceInstance KeyboardInstance;
 
         public void Initialize(InputStateConfiguration configuration, IIconSetProvider iconSetProvider, IInputHandler defaultInputHandler) {
             IconSetProvider = iconSetProvider;
@@ -139,11 +139,18 @@ namespace CollisionBear.InputState {
                 Debug.LogWarning("Failed to fetch InputSystem's input devices");
             }
 
-            var validDevices = inputDevices
-                .Where(i => i.Setup())
-                .Select(i => i.CreateInstance(DefaultInputHandler, iconSetProvider, this));
+            foreach (var device in inputDevices) {
+                if(!device.Setup()) {
+                    continue;
+                }
 
-            InputDeviceInstances.AddRange(validDevices);
+                var instance = device.CreateInstance(DefaultInputHandler, iconSetProvider, this);
+                if (device.GetDeviceType() == InputDeviceType.Keyboard) {
+                    KeyboardInstance = (KeyboardDeviceInstance)instance;
+                }
+
+                InputDeviceInstances.Add(instance);
+            }
         }
 
         private void OnDeviceChange(InputDevice device, InputDeviceChange change) {

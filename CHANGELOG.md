@@ -1,6 +1,11 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [1.3.0] - 2026-02-22
+- FChanged interface for how to use the plugin.
+- Reworked the Initialize() method so the full config is a single ScriptableObject
+- Added possibility to consume specific keycodes on devices
+
 ## [1.0.6] - 2023-10-11
 - Fixed Time updates to Triggers
 

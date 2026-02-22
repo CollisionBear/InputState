@@ -29,6 +29,7 @@ namespace CollisionBear.InputState {
         public string MouseVertical;
 
         [Header("Button Mappings")]
+        [Header("Actions")]
         public KeyCode Action00 = KeyCode.Alpha1;
         public KeyCode Action01 = KeyCode.Alpha2;
         public KeyCode Action02 = KeyCode.Alpha3;
@@ -44,6 +45,7 @@ namespace CollisionBear.InputState {
         public KeyCode Action12 = KeyCode.None;
         public KeyCode Action13 = KeyCode.None;
 
+        [Space]
         public KeyCode LeftBumper = KeyCode.LeftShift;
         public KeyCode RightBumper = KeyCode.RightShift;
 
@@ -53,17 +55,20 @@ namespace CollisionBear.InputState {
         public KeyCode StickLeft = KeyCode.Space;
         public KeyCode StickRight = KeyCode.LeftControl;
 
+        [Header("Utility")]
         public KeyCode Start = KeyCode.Escape;
         public KeyCode Select = KeyCode.Return;
 
         public KeyCode Accept = KeyCode.Return;
         public KeyCode Cancel = KeyCode.Escape;
 
+        [Header("Directions")]
         public KeyCode UpStickButton = KeyCode.W;
         public KeyCode DownStickButton = KeyCode.S;
         public KeyCode LeftStickButton = KeyCode.A;
         public KeyCode RightStickButton = KeyCode.D;
 
+        [Space]
         public KeyCode UpButton = KeyCode.UpArrow;
         public KeyCode DownButton = KeyCode.DownArrow;
         public KeyCode LeftButton = KeyCode.LeftArrow;
@@ -143,8 +148,6 @@ namespace CollisionBear.InputState {
             return InputState;
         }
 
-        public InputState GetInputState() => InputState;
-
         private KeyCode[] SetupKeyButtonMappings() {
             var result = new KeyCode[ButtonUtils.ButtonCount];
             result[(int)Button.Action00] = Action00;
@@ -182,9 +185,11 @@ namespace CollisionBear.InputState {
             }
 
             for(int i = 0; i < keyCodes.Length; i ++) {
-                if (keyCodes[i] == KeyCode.Mouse0) {
-                    result[i].Add((Button)i);
+                if (keyCodes[i] == KeyCode.None) {
+                    continue;
                 }
+
+                result[(int)keyCodes[i]].Add((Button)i);
             }
 
             return result;
@@ -286,6 +291,12 @@ namespace CollisionBear.InputState {
                 if (keyboardInstance.MouseMarker != null) {
                     keyboardInstance.MouseMarker.SetPosition(InputState.MousePosition);
                 }
+            }
+        }
+
+        public void ConsumeKeyCode(KeyCode key) {
+            foreach (var button in KeyToButtonMapping[(int)key]) {
+                InputState.ConsumeButton(button);
             }
         }
     }
