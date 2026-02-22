@@ -303,5 +303,7 @@ namespace CollisionBear.InputState {
         public UpdateType GetReadInputUpdate() => ReadInputUpdate;
 
         public UpdateType GetDelegateInputUpdate() => DelegateInputUpdate;
+
+        public InputState GetState() => InputState;
     }
 }

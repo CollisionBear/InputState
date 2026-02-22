@@ -150,8 +150,10 @@ namespace CollisionBear.InputState {
             // TODO: Implement if needed. ONly valuable for the Keyboard device right now
         }
 
-        public UpdateType GetReadInputUpdate() => UpdateType.Update;
+        public UpdateType GetReadInputUpdate() => UpdateType.LateUpdate;
 
         public UpdateType GetDelegateInputUpdate() => UpdateType.LateUpdate;
+
+        public InputState GetState() => InputState;
     }
 }

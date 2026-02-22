@@ -10,6 +10,8 @@ namespace CollisionBear.InputState {
         InputDeviceType GetDeviceType();
         void SetColor(InputDeviceInstance instance, Color color);
 
+        InputState GetState();
+
         void ConsumeKeyCode(KeyCode key);
 
         UpdateType GetReadInputUpdate();
