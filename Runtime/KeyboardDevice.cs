@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace CollisionBear.InputState {
-    [CreateAssetMenu(fileName = "New Keyboard", menuName = "InputState/Keyboard Device")]
+    [CreateAssetMenu(fileName = "New Keyboard", menuName = Utils.AssetRoot + "Keyboard Device")]
     public class KeyboardDevice : ScriptableObject, IInputDevice {
+        private const int KeyCodeMaxValue = (int)KeyCode.Joystick8Button19; // Highest value in enum.
+
         public enum MouseMarkerUpdateType {
             Update = 0,
             LateUpdate = 1,
@@ -78,7 +80,7 @@ namespace CollisionBear.InputState {
 
         public InputDeviceType GetDeviceType() => InputDeviceType.Keyboard;
 
-        private List<Button> LeftMouseButton;
+        private List<Button>[] KeyToButtonMapping;
 
         public InputDeviceInstance CreateInstance(IInputHandler inputHandler, IIconSetProvider iconSetProvider, InputManager inputManager) {
             var gameObject = new GameObject($"KeyBoardDeviceInstance-{Name}");
@@ -96,7 +98,7 @@ namespace CollisionBear.InputState {
 
             try {
                 ButtonMappings = SetupKeyButtonMappings();
-                LeftMouseButton = GetLeftMouseButtons(ButtonMappings);
+                KeyToButtonMapping = GetKeyToButtonMappings(ButtonMappings);
                 DirectionArrowButtonMappings = SetupArrowKeyDirectionButtonMappings();
                 DirectionWasdButtonMappings = SetupWasdKeyDirectionsButtonMappings();
 
@@ -153,6 +155,12 @@ namespace CollisionBear.InputState {
             result[(int)Button.Action05] = Action05;
             result[(int)Button.Action06] = Action06;
             result[(int)Button.Action07] = Action07;
+            result[(int)Button.Action08] = Action08;
+            result[(int)Button.Action09] = Action09;
+            result[(int)Button.Action10] = Action10;
+            result[(int)Button.Action11] = Action11;
+            result[(int)Button.Action12] = Action12;
+            result[(int)Button.Action13] = Action13;
             result[(int)Button.TriggerLeft] = LeftTrigger;
             result[(int)Button.TriggerRight] = RightTrigger;
             result[(int)Button.BumberLeft] = LeftBumper;
@@ -167,12 +175,15 @@ namespace CollisionBear.InputState {
             return result;
         }
 
-        private List<Button> GetLeftMouseButtons(KeyCode[] keyCodes) {
-            var result = new List<Button>();
+        private List<Button>[] GetKeyToButtonMappings(KeyCode[] keyCodes) {
+            var result = new List<Button>[KeyCodeMaxValue + 1];
+            for(int i = 0; i < keyCodes.Length; i ++) {
+                result[i] = new List<Button>();
+            }
 
             for(int i = 0; i < keyCodes.Length; i ++) {
                 if (keyCodes[i] == KeyCode.Mouse0) {
-                    result.Add((Button)i);
+                    result[i].Add((Button)i);
                 }
             }
 

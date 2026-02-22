@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 
 namespace CollisionBear.InputState {
-    [CreateAssetMenu(fileName = "New Input Device Configuration", menuName = "InputState/Gamepad Configuration")]
+    [CreateAssetMenu(fileName = "New Input Device Configuration", menuName = Utils.AssetRoot + "Gamepad Configuration")]
     public class InputDeviceConfiguration : ScriptableObject {
         [Header("Action buttons")]
         public GamepadButton Action00 = GamepadButton.A;

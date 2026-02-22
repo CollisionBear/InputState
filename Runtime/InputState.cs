@@ -49,7 +49,7 @@ namespace CollisionBear.InputState {
         public void ConsumeButton(Button button) {
             ButtonStates[(int)button].State = KeyState.Consumed;
         }
-        public void ConsumeLeftMouseButton() {
+        public void ConsumeKeyCode(KeyCode code) {
 
         }
     }

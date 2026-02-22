@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace CollisionBear.InputState {
-    [CreateAssetMenu(fileName = "New Icon set", menuName = "CollisionBear/Input/Icon Set")]
+    [CreateAssetMenu(fileName = "New Icon set", menuName = Utils.AssetRoot + "Icon Set")]
     public class InputIconSet : ScriptableObject {
         public InputDeviceType Type = InputDeviceType.Unknown;
 
