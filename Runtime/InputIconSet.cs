@@ -1,24 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace CollisionBear.InputState
-{
+namespace CollisionBear.InputState {
     [CreateAssetMenu(fileName = "New Icon set", menuName = "CollisionBear/Input/Icon Set")]
-    public class InputIconSet : ScriptableObject
-    {
+    public class InputIconSet : ScriptableObject {
         public InputDeviceType Type = InputDeviceType.Unknown;
 
         [System.Serializable]
-        public class IconPair
-        {
+        public class IconPair {
             public Button Button;
             public Sprite Icon;
         }
 
         public List<IconPair> IconPairs = new List<IconPair>();
 
-        public Sprite GetIconForButton(Button button)
-        {
+        public Sprite GetIconForButton(Button button) {
             foreach (var iconPair in IconPairs) {
                 if (iconPair.Button == button) {
                     return iconPair.Icon;

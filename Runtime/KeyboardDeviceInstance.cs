@@ -1,14 +1,11 @@
 using UnityEngine;
 
-namespace CollisionBear.InputState
-{
+namespace CollisionBear.InputState {
     [System.Serializable]
-    public class KeyboardDeviceInstance : InputDeviceInstance
-    {
+    public class KeyboardDeviceInstance : InputDeviceInstance {
         public MouseMarker MouseMarker;
 
-        public override void SetDevice(IInputDevice inputDevice, IInputHandler inputHandler, IIconSetProvider iconSetProvider, InputManager inputManager)
-        {
+        public override void SetDevice(IInputDevice inputDevice, IInputHandler inputHandler, IIconSetProvider iconSetProvider, InputManager inputManager) {
             base.SetDevice(inputDevice, inputHandler, iconSetProvider, inputManager);
 
             var keyboardDevice = inputDevice as KeyboardDevice;
@@ -23,15 +20,13 @@ namespace CollisionBear.InputState
             }
         }
 
-        public override void EnableDevice()
-        {
+        public override void EnableDevice() {
             if (MouseMarker != null) {
                 MouseMarker.gameObject.SetActive(true);
             }
         }
 
-        public override void DisableDevice()
-        {
+        public override void DisableDevice() {
             if (MouseMarker != null) {
                 MouseMarker.gameObject.SetActive(false);
             }

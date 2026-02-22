@@ -1,9 +1,7 @@
 using UnityEngine;
 
-namespace CollisionBear.InputState
-{
-    public interface IInputDevice
-    {
+namespace CollisionBear.InputState {
+    public interface IInputDevice {
         string Name { get; }
         InputDeviceInstance CreateInstance(IInputHandler inputHandler, IIconSetProvider iconSetProvider, InputManager inputManager);
         bool Setup();

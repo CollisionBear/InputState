@@ -4,10 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-namespace CollisionBear.InputState
-{
-    public class InputManager : MonoBehaviour
-    {
+namespace CollisionBear.InputState {
+    public class InputManager : MonoBehaviour {
         public const int InvalidIndex = -1;
 
         private int MaxKeyboardDeviceCount = 4;
@@ -15,8 +13,7 @@ namespace CollisionBear.InputState
         public static InputManager Instance;
         public class InputDeviceEvent : UnityEvent<InputDeviceInstance> { }
 
-        public static InputManager InitializeInputManager(IEnumerable<IInputDevice> initialInputDevices, IIconSetProvider iconSetProvider, IInputHandler defaultInputHandler, InputDeviceConfiguration deviceConfiguration)
-        {
+        public static InputManager InitializeInputManager(IEnumerable<IInputDevice> initialInputDevices, IIconSetProvider iconSetProvider, IInputHandler defaultInputHandler, InputDeviceConfiguration deviceConfiguration) {
             if (defaultInputHandler == null) {
                 throw new System.ArgumentNullException("InitialInputDevices is null");
             }
@@ -48,8 +45,9 @@ namespace CollisionBear.InputState
         public IInputHandler DefaultInputHandler;
         public InputDeviceConfiguration DefaultConfiguration;
 
-        public void Initialize(IEnumerable<IInputDevice> initialInputDevices, IIconSetProvider iconSetProvider, IInputHandler defaultInputHandler, InputDeviceConfiguration defaultConfiguration)
-        {
+        private List<InputDeviceInstance> KeyboardInstances = new List<InputDeviceInstance>();
+
+        public void Initialize(IEnumerable<IInputDevice> initialInputDevices, IIconSetProvider iconSetProvider, IInputHandler defaultInputHandler, InputDeviceConfiguration defaultConfiguration) {
             IconSetProvider = iconSetProvider;
             DefaultInputHandler = defaultInputHandler;
             DefaultConfiguration = defaultConfiguration;
@@ -58,20 +56,18 @@ namespace CollisionBear.InputState
             InputSystem.onDeviceChange += OnDeviceChange;
         }
 
-        public void OnApplicationQuit()
-        {
+        public void OnApplicationQuit() {
             InputSystem.onDeviceChange -= OnDeviceChange;
         }
 
-        public void DebugAddNewKeyboardDevice()
-        {
+        public void DebugAddNewKeyboardDevice() {
             var keyboardDeviceInstance = GetKeyboardDeviceInstance();
-            if(keyboardDeviceInstance == null) {
+            if (keyboardDeviceInstance == null) {
                 Debug.LogWarning("Failed to find KeyboardInputDevice");
                 return;
             }
 
-            if(GetAllKeyboardDeviceInstances().Count >= MaxKeyboardDeviceCount) {
+            if (GetAllKeyboardDeviceInstances().Count >= MaxKeyboardDeviceCount) {
                 Debug.LogWarning("Max KeyboardInputDevice count reached");
                 return;
             }
@@ -82,27 +78,25 @@ namespace CollisionBear.InputState
             OnInputDeviceAdded.Invoke(deviceInstance);
         }
 
-        public void DebugToggleKeyboardDeviceIndex()
-        {
+        public void DebugToggleKeyboardDeviceIndex() {
             var allKeyboardDeviceInstances = GetAllKeyboardDeviceInstances();
 
             var currentActiveDevice = allKeyboardDeviceInstances.FirstOrDefault(i => !i.Disabled());
-            if(currentActiveDevice == null) {
+            if (currentActiveDevice == null) {
                 Debug.LogWarning("No active KeyboardInputDevice");
                 return;
             }
 
             var currentIndex = allKeyboardDeviceInstances.IndexOf(currentActiveDevice);
-            var nextIndex = (currentIndex +1) % allKeyboardDeviceInstances.Count;
+            var nextIndex = (currentIndex + 1) % allKeyboardDeviceInstances.Count;
 
             allKeyboardDeviceInstances[currentIndex].DebugDisable();
             allKeyboardDeviceInstances[nextIndex].DebugEnable();
         }
 
-        private InputDeviceInstance GetKeyboardDeviceInstance()
-        {
-            foreach(var deviceInstance in InputDeviceInstances) {
-                if(deviceInstance.InputDevice.GetDeviceType() == InputDeviceType.Keyboard && !deviceInstance.Disabled()) {
+        private InputDeviceInstance GetKeyboardDeviceInstance() {
+            foreach (var deviceInstance in InputDeviceInstances) {
+                if (deviceInstance.InputDevice.GetDeviceType() == InputDeviceType.Keyboard && !deviceInstance.Disabled()) {
                     return deviceInstance;
                 }
             }
@@ -110,8 +104,7 @@ namespace CollisionBear.InputState
             return null;
         }
 
-        private List<InputDeviceInstance> GetAllKeyboardDeviceInstances()
-        {
+        private List<InputDeviceInstance> GetAllKeyboardDeviceInstances() {
             var result = new List<InputDeviceInstance>();
             foreach (var deviceInstance in InputDeviceInstances) {
                 if (deviceInstance.InputDevice.GetDeviceType() == InputDeviceType.Keyboard) {
@@ -122,18 +115,19 @@ namespace CollisionBear.InputState
             return result;
         }
 
-        private void InitializeInputDevices(IEnumerable<IInputDevice> initialInputDevices, IIconSetProvider iconSetProvider)
-        {
+        private void InitializeInputDevices(IEnumerable<IInputDevice> initialInputDevices, IIconSetProvider iconSetProvider) {
             OnInputDeviceAdded = new InputDeviceEvent();
             OnInputDeviceRemoved = new InputDeviceEvent();
             OnActiveDeviceRemoved = new InputDeviceEvent();
 
             var inputDevices = new List<IInputDevice>();
 
-            try {
-                inputDevices.AddRange(initialInputDevices);
-            } catch (System.Exception) {
-                Debug.LogWarning("Failed to fetch legacy input devices");
+            foreach (var device in initialInputDevices) {
+                try {
+                    inputDevices.Add(device);
+                } catch (System.Exception) {
+                    Debug.LogWarning("Failed to fetch legacy input devices");
+                }
             }
 
             try {
@@ -151,8 +145,7 @@ namespace CollisionBear.InputState
             InputDeviceInstances.AddRange(validDevices);
         }
 
-        private void OnDeviceChange(InputDevice device, InputDeviceChange change)
-        {
+        private void OnDeviceChange(InputDevice device, InputDeviceChange change) {
             if (IsAddDevice(change)) {
                 AddDevice(device);
             } else if (IsRemoveDevice(change)) {
@@ -164,10 +157,9 @@ namespace CollisionBear.InputState
 
         private bool IsRemoveDevice(InputDeviceChange change) => change == InputDeviceChange.Disabled || change == InputDeviceChange.Disconnected || change == InputDeviceChange.Removed;
 
-        private void AddDevice(InputDevice device)
-        {
+        private void AddDevice(InputDevice device) {
             var changedGamePad = GetGamePadForDeviceId(device.deviceId);
-            if(changedGamePad == null) {
+            if (changedGamePad == null) {
                 return;
             }
 
@@ -185,8 +177,7 @@ namespace CollisionBear.InputState
             }
         }
 
-        private void RemoveDevice(InputDevice device)
-        {
+        private void RemoveDevice(InputDevice device) {
             var inputDeviceInstance = FindDeviceInstanceForGamepad(device.deviceId);
             if (inputDeviceInstance != null) {
                 OnInputDeviceRemoved.Invoke(inputDeviceInstance);
@@ -201,8 +192,7 @@ namespace CollisionBear.InputState
             }
         }
 
-        private Gamepad GetGamePadForDeviceId(int deviceId)
-        {
+        private Gamepad GetGamePadForDeviceId(int deviceId) {
             foreach (var gamePad in Gamepad.all) {
                 if (gamePad.deviceId == deviceId) {
                     return gamePad;
@@ -212,8 +202,7 @@ namespace CollisionBear.InputState
             return null;
         }
 
-        private bool ContainsDeviceWithId(int deviceId)
-        {
+        private bool ContainsDeviceWithId(int deviceId) {
             foreach (var inputDeviceInstance in InputDeviceInstances) {
                 if (inputDeviceInstance.InputDevice is InputSystemDevice) {
                     var inputSystemDevice = inputDeviceInstance.InputDevice as InputSystemDevice;
@@ -226,8 +215,7 @@ namespace CollisionBear.InputState
             return false;
         }
 
-        private InputDeviceInstance FindDeviceInstanceForGamepad(int deviceId)
-        {
+        private InputDeviceInstance FindDeviceInstanceForGamepad(int deviceId) {
             foreach (var deviceInstance in InputDeviceInstances) {
                 if (!(deviceInstance.InputDevice is InputSystemDevice)) {
                     continue;

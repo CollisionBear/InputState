@@ -1,6 +1,5 @@
 using UnityEngine;
 
-namespace CollisionBear.InputState
-{
+namespace CollisionBear.InputState {
     public class InputAxisAttribute : PropertyAttribute { }
 }

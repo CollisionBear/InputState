@@ -1,10 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
 
-namespace CollisionBear.InputState
-{
-    public class ButtonState
-    {
+namespace CollisionBear.InputState {
+    public class ButtonState {
         public KeyState State;
         public float Time;
 
@@ -15,21 +13,21 @@ namespace CollisionBear.InputState
         }
 
         public void SetState(KeyCode keyCodeA, KeyCode keyCodeB) {
-            SetState(Max(GetKeyStateForKey(keyCodeA),  GetKeyStateForKey(keyCodeB)));
+            SetState(Max(GetKeyStateForKey(keyCodeA), GetKeyStateForKey(keyCodeB)));
         }
 
         public void SetState(ButtonControl buttonControl) {
             SetState(GetKeyStateForButton(buttonControl));
         }
 
-        public void SetDirectionState(ButtonControl buttonControl, float value, float directionButtonThreshold) {  
+        public void SetDirectionState(ButtonControl buttonControl, float value, float directionButtonThreshold) {
             SetState(Max(GetKeyStateForButton(buttonControl), GetLeftStickKeyState(value, directionButtonThreshold)));
         }
 
         private void SetState(KeyState newState) {
             Time += UnityEngine.Time.deltaTime;
 
-            if(newState != PreviousState) {
+            if (newState != PreviousState) {
                 Time = 0;
             }
 
@@ -53,8 +51,7 @@ namespace CollisionBear.InputState
             }
         }
 
-        private KeyState GetKeyStateForKey(KeyCode keyCode)
-        {
+        private KeyState GetKeyStateForKey(KeyCode keyCode) {
             if (Input.GetKeyDown(keyCode)) {
                 return KeyState.Pressed;
             } else if (Input.GetKeyUp(keyCode)) {
@@ -66,8 +63,7 @@ namespace CollisionBear.InputState
             }
         }
 
-        private KeyState GetKeyStateForButton(ButtonControl buttonControl)
-        {
+        private KeyState GetKeyStateForButton(ButtonControl buttonControl) {
             if (buttonControl.wasPressedThisFrame) {
                 return KeyState.Pressed;
             } else if (buttonControl.wasReleasedThisFrame) {
@@ -81,7 +77,7 @@ namespace CollisionBear.InputState
 
         public void SetStateFromTrigger(ButtonControl triggerControl, float triggerThreshold) {
             var newState = ReadTriggerValue(triggerControl, triggerThreshold);
-            if(State != newState) {
+            if (State != newState) {
                 Time = 0;
             } else {
                 Time += UnityEngine.Time.deltaTime;
@@ -90,8 +86,7 @@ namespace CollisionBear.InputState
             State = newState;
         }
 
-        private KeyState ReadTriggerValue(ButtonControl triggerControl, float triggerThreshold)
-        {
+        private KeyState ReadTriggerValue(ButtonControl triggerControl, float triggerThreshold) {
             var triggerState = false;
             var triggerValue = triggerControl.ReadValue();
 
@@ -120,8 +115,7 @@ namespace CollisionBear.InputState
         public KeyState Max(KeyState a, KeyState b) => (KeyState)Mathf.Max((byte)a, (byte)b);
     }
 
-    public enum KeyState : byte
-    {
+    public enum KeyState : byte {
         Up = 0,
         Down = 1,           // The button is in a pressed state
         Pressed = 2,        // The button was pressed this tick 

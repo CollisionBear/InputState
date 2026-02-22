@@ -1,11 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 
-namespace CollisionBear.InputState
-{
+namespace CollisionBear.InputState {
     [CreateAssetMenu(fileName = "New Input Device Configuration", menuName = "InputState/Gamepad Configuration")]
-    public class InputDeviceConfiguration : ScriptableObject
-    {
+    public class InputDeviceConfiguration : ScriptableObject {
         [Header("Action buttons")]
         public GamepadButton Action00 = GamepadButton.A;
         public GamepadButton Action01 = GamepadButton.B;
@@ -38,8 +36,7 @@ namespace CollisionBear.InputState
         public GamepadButton Accept = GamepadButton.A;
         public GamepadButton Cancel = GamepadButton.B;
 
-        public GamepadButton[] GetButtonMapping()
-        {
+        public GamepadButton[] GetButtonMapping() {
             var result = new GamepadButton[ButtonUtils.ButtonCount];
 
             result[(int)Button.Action00] = Action00;

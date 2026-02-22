@@ -1,7 +1,5 @@
-namespace CollisionBear.InputState
-{
-    public interface IIconSetProvider
-    {
+namespace CollisionBear.InputState {
+    public interface IIconSetProvider {
         InputIconSet GetIconSetForDeviceType(InputDeviceType deviceType);
     }
 }
