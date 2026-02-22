@@ -11,5 +11,8 @@ namespace CollisionBear.InputState {
         void SetColor(InputDeviceInstance instance, Color color);
 
         void ConsumeKeyCode(KeyCode key);
+
+        UpdateType GetReadInputUpdate();
+        UpdateType GetDelegateInputUpdate();
     }
 }

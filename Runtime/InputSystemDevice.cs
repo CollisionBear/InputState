@@ -149,5 +149,9 @@ namespace CollisionBear.InputState {
         public void ConsumeKeyCode(KeyCode key) {
             // TODO: Implement if needed. ONly valuable for the Keyboard device right now
         }
+
+        public UpdateType GetReadInputUpdate() => UpdateType.Update;
+
+        public UpdateType GetDelegateInputUpdate() => UpdateType.LateUpdate;
     }
 }

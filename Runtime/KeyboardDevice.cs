@@ -6,13 +6,13 @@ namespace CollisionBear.InputState {
     public class KeyboardDevice : ScriptableObject, IInputDevice {
         private const int KeyCodeMaxValue = (int)KeyCode.Joystick8Button19; // Highest value in enum.
 
-        public enum MouseMarkerUpdateType {
-            Update = 0,
-            LateUpdate = 1,
-        }
+        [Header("Input / dispatch")]
+        public UpdateType ReadInputUpdate = UpdateType.Update;
+        public UpdateType DelegateInputUpdate = UpdateType.LateUpdate;
 
+        [Header("In-world marker")]
         public MouseMarker MouseMarkerPrefab;
-        public MouseMarkerUpdateType MouseMarkerUpdate = MouseMarkerUpdateType.LateUpdate;
+        public UpdateType MouseMarkerUpdate = UpdateType.LateUpdate;
 
         private int GroundLayerMask;
 
@@ -139,7 +139,7 @@ namespace CollisionBear.InputState {
             ReadButtonState();
             ReadDirectionButtonState(InputState.DirectionButtonStates);
 
-            if (MouseMarkerUpdate == MouseMarkerUpdateType.Update) {
+            if (MouseMarkerUpdate == UpdateType.Update) {
                 if (keyboardInstance.MouseMarker != null) {
                     keyboardInstance.MouseMarker.SetPosition(InputState.MousePosition);
                 }
@@ -287,7 +287,7 @@ namespace CollisionBear.InputState {
 
         public void InputLateUpdate(InputDeviceInstance instance) {
             var keyboardInstance = instance as KeyboardDeviceInstance;
-            if (MouseMarkerUpdate == MouseMarkerUpdateType.LateUpdate) {
+            if (MouseMarkerUpdate == UpdateType.LateUpdate) {
                 if (keyboardInstance.MouseMarker != null) {
                     keyboardInstance.MouseMarker.SetPosition(InputState.MousePosition);
                 }
@@ -299,5 +299,9 @@ namespace CollisionBear.InputState {
                 InputState.ConsumeButton(button);
             }
         }
+
+        public UpdateType GetReadInputUpdate() => ReadInputUpdate;
+
+        public UpdateType GetDelegateInputUpdate() => DelegateInputUpdate;
     }
 }

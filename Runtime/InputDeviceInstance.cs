@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace CollisionBear.InputState {
-    [System.Serializable]
+    [DefaultExecutionOrder(1)]
     public class InputDeviceInstance : MonoBehaviour {
         public int DeviceIndex = InputManager.InvalidIndex;
         public IInputDevice InputDevice;
@@ -10,6 +10,8 @@ namespace CollisionBear.InputState {
 
         private bool IsDisabled;
         private InputManager InputManager;
+
+        private InputState State;
 
         public virtual void SetDevice(IInputDevice inputDevice, IInputHandler inputHandler, IIconSetProvider iconSetProvider, InputManager inputManager) {
             InputDevice = inputDevice;
@@ -37,14 +39,40 @@ namespace CollisionBear.InputState {
         public virtual void DisableDevice() { }
 
         private void Update() {
-            if (CurrentInputHandler == null || IsDisabled) {
+            if (IsDisabled) {
                 return;
             }
 
-            CurrentInputHandler.TakeInput(InputDevice.UpdateInputState(this), this);
+            if(InputDevice.GetReadInputUpdate() == UpdateType.Update) {
+                State = InputDevice.UpdateInputState(this); 
+            }
+
+            if (InputDevice.GetDelegateInputUpdate() == UpdateType.Update) {
+                if(CurrentInputHandler == null) {
+                    return;
+                }
+
+                CurrentInputHandler.TakeInput(State, this);
+            }
         }
 
         private void LateUpdate() {
+            if(IsDisabled) {
+                return;
+            }
+
+            if (InputDevice.GetReadInputUpdate() == UpdateType.LateUpdate) {
+                State = InputDevice.UpdateInputState(this);
+            }
+
+            if (InputDevice.GetDelegateInputUpdate() == UpdateType.LateUpdate) {
+                if (CurrentInputHandler == null) {
+                    return;
+                }
+
+                CurrentInputHandler.TakeInput(State, this);
+            }
+
             InputDevice.InputLateUpdate(this);
         }
 
