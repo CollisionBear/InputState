@@ -49,7 +49,7 @@ namespace CollisionBear.InputState {
         public IIconSetProvider IconSetProvider;
         public IInputHandler DefaultInputHandler;
 
-        private KeyboardDeviceInstance KeyboardInstance;
+        private KeyboardDevice KeyboardDevice;
 
         public void Initialize(InputStateConfiguration configuration, IIconSetProvider iconSetProvider, IInputHandler defaultInputHandler) {
             IconSetProvider = iconSetProvider;
@@ -97,7 +97,7 @@ namespace CollisionBear.InputState {
             allKeyboardDeviceInstances[nextIndex].DebugEnable();
         }
 
-        public KeyboardDeviceInstance GetKeyboardInstance() => KeyboardInstance;
+        public KeyboardDevice GetKeyboardDevice() => KeyboardDevice;
 
         private InputDeviceInstance GetKeyboardDeviceInstance() {
             foreach (var deviceInstance in InputDeviceInstances) {
@@ -146,12 +146,11 @@ namespace CollisionBear.InputState {
                     continue;
                 }
 
-                var instance = device.CreateInstance(DefaultInputHandler, iconSetProvider, this);
                 if (device.GetDeviceType() == InputDeviceType.Keyboard) {
-                    KeyboardInstance = (KeyboardDeviceInstance)instance;
+                    KeyboardDevice = device as KeyboardDevice;
                 }
 
-                InputDeviceInstances.Add(instance);
+                InputDeviceInstances.Add(device.CreateInstance(DefaultInputHandler, iconSetProvider, this));
             }
         }
 
