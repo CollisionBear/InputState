@@ -177,7 +177,7 @@ namespace CollisionBear.InputState {
 
         private List<Button>[] GetKeyToButtonMappings(KeyCode[] keyCodes) {
             var result = new List<Button>[KeyCodeMaxValue + 1];
-            for(int i = 0; i < keyCodes.Length; i ++) {
+            for(int i = 0; i < KeyCodeMaxValue; i ++) {
                 result[i] = new List<Button>();
             }
 
